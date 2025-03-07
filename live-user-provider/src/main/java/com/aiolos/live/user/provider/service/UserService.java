@@ -1,5 +1,6 @@
 package com.aiolos.live.user.provider.service;
 
+import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.provider.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    UserDTO getUserById(Long userId);
 }

@@ -18,12 +18,38 @@
     <mysql.version>8.0.28</mysql.version>
     <mybatis-plus.version>3.5.3</mybatis-plus.version>
     <sharding.jdbc.version>5.3.2</sharding.jdbc.version>
+
+    <!-- 子模块版本号 -->
+    <live-api.version>1.0-SNAPSHOT</live-api.version>
+    <live-user-interface.version>1.0-SNAPSHOT</live-user-interface.version>
+    <live-user-provider.version>1.0-SNAPSHOT</live-user-provider.version>
   </properties>
 
+  <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
   <parent>
     <groupId>com.aiolos</groupId>
     <artifactId>common</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-api</artifactId>
+        <version>${live-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-user-interface</artifactId>
+        <version>${live-user-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-user-provider</artifactId>
+        <version>${live-user-provider.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

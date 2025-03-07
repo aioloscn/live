@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: live-user-provider
+  cloud:
+    nacos:
+      username: aiolos
+      password: aiolos
+      discovery:
+        server-addr: provider.live.com:8848
+        namespace: live-user-provider
