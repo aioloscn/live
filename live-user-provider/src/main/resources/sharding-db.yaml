@@ -1,31 +1,38 @@
 dataSources:
-  live:
-    data-source-class-name: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://localhost:3306/live?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+  live-master:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3307/live?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: root
     password: root
-    idle-timeout: 5 #单位：分钟
-    minimum-idle: 100
-    pool-name: db-user
-    maximum-pool-size: 1000
-    connection-timeout: 30000
-    connection-init-sql: SELECT 1
-    connection-test-query: SELECT 1
+  live-slave0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3308/live?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
 
 rules:
+  - !READWRITE_SPLITTING
+    dataSources:
+      live:
+        staticStrategy:
+          writeDataSourceName: live-master
+          readDataSourceNames:
+            - live-slave0
   - !SINGLE
-    defaultDataSource: live # 不分库分表的默认数据源
+    defaultDataSource: live # 默认数据源，未分片表默认走的数据源
   - !SHARDING
     tables:
+#      t_order: db_order 如果引入其他数据源的其他表，配置表名：数据源名称
       user:
-        actual-data-nodes: live.user_$->{(0..99).collect{it.toString().padLeft(2, '0')}}
-        table-strategy:
+        actualDataNodes: live.user_$->{(0..99).collect{it.toString().padLeft(2, '0')}}
+        tableStrategy:
           standard:
-            sharding-column: user_id
-            sharding-algorithm-name: user-inline
+            shardingColumn: user_id
+            shardingAlgorithmName: user-inline
 
-    sharding-algorithms:
+    shardingAlgorithms:
       user-inline:
         type: INLINE
         props:

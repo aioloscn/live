@@ -1,8 +1,13 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:sharding-db.yaml
-
-dubbo:
-  application:
-    name: live-user-provider
+    hikari:
+      pool-name: db-user
+      idle-timeout: 300000
+      minimum-idle: 10
+      maximum-pool-size: 50
+      connection-timeout: 30000

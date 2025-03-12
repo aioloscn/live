@@ -2,7 +2,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: live-user-provider
+    name: live-api
   cloud:
     nacos:
       username: nacos

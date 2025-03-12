@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class UserDTO {
+public class UserDTO implements java.io.Serializable {
 
     private Long userId;
 
