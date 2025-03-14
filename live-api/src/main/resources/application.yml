@@ -1,2 +1,25 @@
 server:
-  port: 8082
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: live-api
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: live-test
+
+dubbo:
+  application:
+    name: live-api-application # 仅作为服务消费者的话不会注册到nacos，除非有使用@DubboService注解
+    qos-enable: false
+  registry:
+    address: nacos://127.0.0.1:8848?namespace=live-test&username=nacos&password=nacos
+  consumer:
+    retries: 3
+    timeout: 5000 # 全局默认超时，控制消费者调用服务时的等待时间

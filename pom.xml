@@ -12,6 +12,7 @@
     <module>live-user-interface</module>
     <module>live-user-provider</module>
     <module>live-api</module>
+    <module>live-common</module>
   </modules>
 
   <properties>
@@ -21,6 +22,7 @@
 
     <!-- 子模块版本号 -->
     <live-api.version>1.0-SNAPSHOT</live-api.version>
+    <live-common.version>1.0-SNAPSHOT</live-common.version>
     <live-user-interface.version>1.0-SNAPSHOT</live-user-interface.version>
     <live-user-provider.version>1.0-SNAPSHOT</live-user-provider.version>
   </properties>
@@ -41,6 +43,11 @@
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>
+        <artifactId>live-common</artifactId>
+        <version>${live-common.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
         <artifactId>live-user-interface</artifactId>
         <version>${live-user-interface.version}</version>
       </dependency>
@@ -51,13 +58,5 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.github.xiaoymin</groupId>
-      <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-      <version>4.5.0</version>
-    </dependency>
-  </dependencies>
 
 </project>

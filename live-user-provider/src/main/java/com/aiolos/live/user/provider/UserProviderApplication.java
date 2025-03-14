@@ -7,6 +7,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @EnableDubbo
@@ -22,5 +23,9 @@ public class UserProviderApplication {
         // 检查Web服务器Bean是否存在
         boolean isTomcatActive = context.containsBean("tomcatServletWebServerFactory");
         System.out.println("Tomcat是否启动？ " + isTomcatActive);
+
+        Environment env = context.getEnvironment();
+        System.out.println("spring.application.name=" + env.getProperty("spring.application.name"));
+        System.out.println("redis.key.application-name=" + env.getProperty("redis.key.application-name"));
     }
 }

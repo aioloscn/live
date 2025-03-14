@@ -1,7 +1,15 @@
-server:
-  port: 8081
-
 spring:
+  profiles:
+    active: dev
+  application:
+    name: live-user-provider
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: live-test
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:sharding-db.yaml
@@ -11,3 +19,27 @@ spring:
       minimum-idle: 10
       maximum-pool-size: 50
       connection-timeout: 30000
+  data:
+    redis:
+      port: 6379
+      host: 127.0.0.1
+      database: 0
+      lettuce:
+        pool:
+          min-idle: 10
+          max-idle: 20
+          max-active: 50
+
+dubbo:
+  protocol:
+    name: dubbo
+    port: 9090
+  application:
+    name: live-user-provider-application
+    qos-enable: false
+  registry:
+    address: nacos://127.0.0.1:8848?namespace=live-test&username=nacos&password=nacos
+
+redis:
+  key:
+    application-name: ${spring.application.name}  # 绑定到 RedisKeyProperties
