@@ -1,5 +1,7 @@
 package com.aiolos.live.common.keys;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class RedisKeyBuilder {
 
     private final String applicationName;
@@ -15,5 +17,9 @@ public class RedisKeyBuilder {
 
     public String getPrefix() {
         return applicationName + SPLIT;
+    }
+
+    public int randomExpireSeconds() {
+        return ThreadLocalRandom.current().nextInt(60, 3600);
     }
 }

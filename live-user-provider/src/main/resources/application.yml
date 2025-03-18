@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   application:
     name: live-user-provider
   cloud:
@@ -10,6 +8,24 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
         namespace: live-test
+    stream:
+      function:
+        definition: cacheAsyncDelete
+      bindings:
+        cacheAsyncDelete-in-0:
+          destination: live-user-provider-cache-async-delete-topic
+          group: cache-async-delete-group
+          content-type: application/json
+          consumer:
+            max-attempts: 3 # 重试次数（包括首次消费）
+            back-off-initial-interval: 1000 # 重试间隔时间（毫秒）
+        cacheAsyncDelete-out-0:
+          destination: live-user-provider-cache-async-delete-topic
+          content-type: application/json
+      rocketmq:
+        binder:
+          name-server: 127.0.0.1:9876
+          enable-msg-trace: true
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:sharding-db.yaml

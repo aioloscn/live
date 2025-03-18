@@ -2,11 +2,16 @@ package com.aiolos.live.user.interfaces;
 
 import com.aiolos.live.user.dto.UserDTO;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IUserRpc {
 
     UserDTO getUserById(Long userId);
 
-    boolean updateUserInfo(UserDTO userDTO);
+    void insertUser(UserDTO userDTO);
 
-    boolean insertUser(UserDTO userDTO);
+    void updateUserInfo(UserDTO userDTO);
+
+    Map<Long, UserDTO> batchQueryUserInfo(List<Long> userIds);
 }

@@ -1,37 +1,37 @@
 package com.aiolos.live.user.provider.rpc;
 
-import com.aiolos.common.utils.ConvertBeanUtils;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.interfaces.IUserRpc;
-import com.aiolos.live.user.provider.po.User;
 import com.aiolos.live.user.provider.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+
+import java.util.List;
+import java.util.Map;
 
 @DubboService
 public class UserRpcImpl implements IUserRpc {
 
     @Resource
     private UserService userService;
-
+    
     @Override
     public UserDTO getUserById(Long userId) {
         return userService.getUserById(userId);
     }
 
     @Override
-    public boolean updateUserInfo(UserDTO userDTO) {
-        if (userDTO == null || userDTO.getUserId() == null) {
-            return false;
-        }
-        return userService.updateById(ConvertBeanUtils.convert(userDTO, User.class));
+    public void insertUser(UserDTO userDTO) {
+        userService.insertUser(userDTO);
     }
 
     @Override
-    public boolean insertUser(UserDTO userDTO) {
-        if (userDTO == null || userDTO.getUserId() == null) {
-            return false;
-        }
-        return userService.save(ConvertBeanUtils.convert(userDTO, User.class));
+    public void updateUserInfo(UserDTO userDTO) {
+        userService.updateUserInfo(userDTO);
+    }
+
+    @Override
+    public Map<Long, UserDTO> batchQueryUserInfo(List<Long> userIds) {
+        return userService.batchQueryUserInfo(userIds);
     }
 }
