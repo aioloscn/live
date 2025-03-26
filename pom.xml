@@ -13,6 +13,11 @@
     <module>live-user-provider</module>
     <module>live-api</module>
     <module>live-common</module>
+    <module>live-id-generator-interface</module>
+    <module>live-id-generator-provider</module>
+    <module>live-model</module>
+    <module>live-service</module>
+    <module>live-enums</module>
   </modules>
 
   <properties>
@@ -23,8 +28,13 @@
     <!-- 子模块版本号 -->
     <live-api.version>1.0-SNAPSHOT</live-api.version>
     <live-common.version>1.0-SNAPSHOT</live-common.version>
+    <live-enums.version>1.0-SNAPSHOT</live-enums.version>
+    <live-model.version>1.0-SNAPSHOT</live-model.version>
+    <live-service.version>1.0-SNAPSHOT</live-service.version>
     <live-user-interface.version>1.0-SNAPSHOT</live-user-interface.version>
     <live-user-provider.version>1.0-SNAPSHOT</live-user-provider.version>
+    <live-id-generator-interface.version>1.0-SNAPSHOT</live-id-generator-interface.version>
+    <live-id-generator-provider.version>1.0-SNAPSHOT</live-id-generator-provider.version>
   </properties>
 
   <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
@@ -48,6 +58,21 @@
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>
+        <artifactId>live-enums</artifactId>
+        <version>${live-enums.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-model</artifactId>
+        <version>${live-model.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-service</artifactId>
+        <version>${live-service.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
         <artifactId>live-user-interface</artifactId>
         <version>${live-user-interface.version}</version>
       </dependency>
@@ -55,6 +80,16 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-user-provider</artifactId>
         <version>${live-user-provider.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-id-generator-interface</artifactId>
+        <version>${live-id-generator-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-id-generator-provider</artifactId>
+        <version>${live-id-generator-provider.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

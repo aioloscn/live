@@ -1,41 +1,37 @@
 package com.aiolos.live.user.provider.service.impl;
 
-import com.aiolos.common.utils.ConvertBeanUtils;
+import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
+import com.aiolos.live.model.po.User;
+import com.aiolos.live.service.UserService;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.provider.mq.producer.UpdateUserInfoProducer;
-import com.aiolos.live.user.provider.po.User;
-import com.aiolos.live.user.provider.mapper.UserMapper;
-import com.aiolos.live.user.provider.service.UserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.aiolos.live.user.provider.service.LiveUserService;
+import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
-import org.apache.curator.shaded.com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * <p>
- * 用户表 服务实现类
- * </p>
- *
- * @author Aiolos
- * @since 2025-03-04
- */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class LiveUserServiceImpl implements LiveUserService {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
     @Resource
     private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
     @Autowired
@@ -48,9 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
         if (obj != null) {
-            return ConvertBeanUtils.convert(obj, UserDTO.class);
+            return ConvertBeanUtil.convert(obj, UserDTO::new);
         }
-        UserDTO userDTO = ConvertBeanUtils.convert(userMapper.selectById(userId), UserDTO.class);
+        UserDTO userDTO = ConvertBeanUtil.convert(userService.getById(userId), UserDTO::new);
         if (userDTO != null) {
             redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userId), userDTO, userProviderRedisKeyBuilder.getExpire(), TimeUnit.SECONDS);
         }
@@ -62,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userDTO == null || userDTO.getUserId() == null) {
             return;
         }
-        userMapper.insert(ConvertBeanUtils.convert(userDTO, User.class));
+        userService.save(ConvertBeanUtil.convert(userDTO, User::new));
     }
 
     @Override
@@ -70,8 +66,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userDTO == null || userDTO.getUserId() == null) {
             return;
         }
-        int updated = userMapper.updateById(ConvertBeanUtils.convert(userDTO, User.class));
-        if (updated > 0) {
+        boolean updated = userService.updateById(ConvertBeanUtil.convert(userDTO, User::new));
+        if (updated) {
             redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(userDTO.getUserId()));
             updateUserInfoProducer.deleteUserCache(userDTO);
         }
@@ -89,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         List<String> keyList = userIds.stream().map(userId -> userProviderRedisKeyBuilder.buildUserInfoKey(userId)).collect(Collectors.toList());
         List<UserDTO> dtoListInRedis = redisTemplate.opsForValue().multiGet(keyList).stream()
-                .filter(Objects::nonNull).map(x -> ConvertBeanUtils.convert(x, UserDTO.class)).collect(Collectors.toList());
+                .filter(Objects::nonNull).map(x -> ConvertBeanUtil.convert(x, UserDTO::new)).collect(Collectors.toList());
 
         if (!CollectionUtils.isEmpty(dtoListInRedis) && dtoListInRedis.size() == userIds.size()) {
             return dtoListInRedis.stream().collect(Collectors.toMap(UserDTO::getUserId, Function.identity()));
@@ -104,9 +100,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<UserDTO> dbQueryResult = new ArrayList<>();
         try {
             dbQueryResult = forkJoinPool.submit(() ->
-                            userIdMap.values().parallelStream()
-                                    .flatMap(ids -> ConvertBeanUtils.convertList(userMapper.selectBatchIds(ids), UserDTO.class).stream())
-                                    .collect(Collectors.toList())
+                    userIdMap.values().parallelStream()
+                            .flatMap(ids -> ConvertBeanUtil.convertList(userService.listByIds(ids), UserDTO::new).stream())
+                            .collect(Collectors.toList())
             ).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);

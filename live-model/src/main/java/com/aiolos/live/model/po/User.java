@@ -1,4 +1,4 @@
-package com.aiolos.live.user.provider.po;
+package com.aiolos.live.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

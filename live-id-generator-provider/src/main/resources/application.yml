@@ -1,0 +1,29 @@
+config:
+  nacos:
+    url: 127.0.0.1:8848
+
+spring:
+  application:
+    name: live-id-generator-provider
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: ${config.nacos.url}
+        namespace: live-test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/id_generator?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+dubbo:
+  protocol:
+    name: dubbo
+    port: 9090
+  application:
+    name: dubbo-live-id-generator-provider
+    qos-enable: false
+  registry:
+    address: nacos://${config.nacos.url}?namespace=live-test&username=nacos&password=nacos

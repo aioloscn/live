@@ -1,3 +1,9 @@
+config:
+  nacos:
+    url: 127.0.0.1:8848
+  rocketmq:
+    url: 127.0.0.1:9876
+
 spring:
   application:
     name: live-user-provider
@@ -6,7 +12,7 @@ spring:
       username: nacos
       password: nacos
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${config.nacos.url}
         namespace: live-test
     stream:
       function:
@@ -17,14 +23,14 @@ spring:
           group: cache-async-delete-group
           content-type: application/json
           consumer:
-            max-attempts: 3 # 重试次数（包括首次消费）
+            max-attempts: 1 # 重试次数（包括首次消费）
             back-off-initial-interval: 1000 # 重试间隔时间（毫秒）
         cacheAsyncDelete-out-0:
           destination: live-user-provider-cache-async-delete-topic
           content-type: application/json
       rocketmq:
         binder:
-          name-server: 127.0.0.1:9876
+          name-server: ${config.rocketmq.url}
           enable-msg-trace: true
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
@@ -51,10 +57,10 @@ dubbo:
     name: dubbo
     port: 9090
   application:
-    name: live-user-provider-application
+    name: dubbo-live-user-provider
     qos-enable: false
   registry:
-    address: nacos://127.0.0.1:8848?namespace=live-test&username=nacos&password=nacos
+    address: nacos://${config.nacos.url}?namespace=live-test&username=nacos&password=nacos
 
 redis:
   key:

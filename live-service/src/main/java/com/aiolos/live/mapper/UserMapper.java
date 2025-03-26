@@ -1,6 +1,6 @@
-package com.aiolos.live.user.provider.mapper;
+package com.aiolos.live.mapper;
 
-import com.aiolos.live.user.provider.po.User;
+import com.aiolos.live.model.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

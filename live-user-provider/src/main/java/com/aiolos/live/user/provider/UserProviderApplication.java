@@ -7,12 +7,14 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @EnableDubbo
 @EnableDiscoveryClient
-@MapperScan("com.aiolos.live.user.provider.mapper")
+@ComponentScan("com.aiolos.live")
+@MapperScan("com.aiolos.live.mapper")
 public class UserProviderApplication {
 
     public static void main(String[] args) {

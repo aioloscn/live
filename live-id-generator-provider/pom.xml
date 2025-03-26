@@ -6,9 +6,8 @@
         <artifactId>live</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>live-user-provider</artifactId>
-    <version>${live-user-provider.version}</version>
-
+    <artifactId>live-id-generator-provider</artifactId>
+    
     <dependencies>
         <dependency>
             <groupId>com.aiolos</groupId>
@@ -22,11 +21,6 @@
             <groupId>com.aiolos</groupId>
             <artifactId>common-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.aiolos</groupId>
-            <artifactId>live-common</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.aiolos</groupId>
             <artifactId>live-model</artifactId>
@@ -37,9 +31,13 @@
         </dependency>
         <dependency>
             <groupId>com.aiolos</groupId>
-            <artifactId>live-user-interface</artifactId>
+            <artifactId>live-enums</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-id-generator-interface</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
@@ -57,15 +55,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>shardingsphere-jdbc-core</artifactId>
-            <version>${sharding.jdbc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -12,6 +12,10 @@
     <dependencies>
         <dependency>
             <groupId>com.aiolos</groupId>
+            <artifactId>common-exception</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
             <artifactId>common-web</artifactId>
         </dependency>
 
