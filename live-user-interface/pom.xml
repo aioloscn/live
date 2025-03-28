@@ -9,4 +9,10 @@
     <artifactId>live-user-interface</artifactId>
     <version>${live-user-interface.version}</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-enums</artifactId>
+        </dependency>
+    </dependencies>
 </project>

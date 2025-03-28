@@ -1,7 +1,8 @@
 package com.aiolos.live.user.provider.mq.consumer;
 
 import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
-import com.aiolos.live.user.dto.UserDTO;
+import com.aiolos.live.common.message.UserCacheMessage;
+import com.aiolos.live.enums.UserCacheEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +21,18 @@ public class UpdateUserInfoConsumer {
     private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
 
     @Bean
-    public Consumer<UserDTO> cacheAsyncDelete() {
+    public Consumer<UserCacheMessage> cacheAsyncDelete() {
         return message -> {
             log.info("接收到删除redis缓存消息: {}", message);
             if (message != null && message.getUserId() != null) {
-                redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(message.getUserId()));
-                log.info("已删除用户{}的缓存", message.getUserId());
+                
+                if (message.getUserCacheEnum() == UserCacheEnum.USER_INFO_CACHE) {
+                    redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(message.getUserId()));
+                    log.info("已删除用户{}的缓存", message.getUserId());
+                } else if (message.getUserCacheEnum() == UserCacheEnum.USER_TAG_CACHE) {
+                    redisTemplate.delete(userProviderRedisKeyBuilder.buildUserTagKey(message.getUserId()));
+                    log.info("已删除用户{}的标签缓存", message.getUserId());
+                }
             }
         };
     }

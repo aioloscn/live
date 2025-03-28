@@ -48,7 +48,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
         UserDTO userDTO = ConvertBeanUtil.convert(userService.getById(userId), UserDTO::new);
         if (userDTO != null) {
-            redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userId), userDTO, userProviderRedisKeyBuilder.getExpire(), TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userId), userDTO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
         }
         return userDTO;
     }
@@ -69,7 +69,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         boolean updated = userService.updateById(ConvertBeanUtil.convert(userDTO, User::new));
         if (updated) {
             redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(userDTO.getUserId()));
-            updateUserInfoProducer.deleteUserCache(userDTO);
+            updateUserInfoProducer.deleteUserCache(userDTO.getUserId());
         }
     }
 
@@ -116,7 +116,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             redisTemplate.opsForValue().multiSet(dbQueryMap);
             // 批量设置过期时间
             redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
-                dbQueryMap.keySet().forEach(key -> connection.keyCommands().expire(key.getBytes(), userProviderRedisKeyBuilder.getExpire() + userProviderRedisKeyBuilder.randomExpireSeconds()));
+                dbQueryMap.keySet().forEach(key -> connection.keyCommands().expire(key.getBytes(), userProviderRedisKeyBuilder.get7DaysExpiration() + userProviderRedisKeyBuilder.randomExpireSeconds()));
                 return null;
             });
 

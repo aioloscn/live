@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.concurrent.CountDownLatch;
+
 @SpringBootApplication
 @EnableDubbo
 @EnableDiscoveryClient
@@ -30,23 +32,20 @@ public class IdGeneratorApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        /*new Thread(() -> test(), "thread1").start();
-        new Thread(() -> test(), "thread2").start();
-        new Thread(() -> test(), "thread3").start();
-        new Thread(() -> test(), "thread4").start();
-        new Thread(() -> test(), "thread5").start();
-        new Thread(() -> test(), "thread6").start();*/
-    }
-    
-    private void test() {
-        for (int i = 0; i < 50; i++) {
-            Long seqId = liveIdGeneratorService.getSeqId(1);
-            System.out.println(Thread.currentThread().getName() + ": " + seqId);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        /*CountDownLatch latch = new CountDownLatch(1);
+        for (int i = 0; i < 6; i++) {
+            new Thread(() -> {
+                try {
+                    latch.await();
+                    Long seqId = liveIdGeneratorService.getSeqId(1);
+                    System.out.println(Thread.currentThread().getName() + ": " + seqId);
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }, "thread" + i).start();
         }
+        latch.countDown();
+        Thread.sleep(100000);*/
     }
 }

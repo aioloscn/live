@@ -3,10 +3,11 @@ package com.aiolos.live.user.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class UserDTO implements java.io.Serializable {
+public class UserDTO implements Serializable {
 
     private Long userId;
 

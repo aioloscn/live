@@ -5,7 +5,7 @@ import com.aiolos.live.user.dto.UserDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface IUserRpc {
+public interface UserRpc {
 
     UserDTO getUserById(Long userId);
 

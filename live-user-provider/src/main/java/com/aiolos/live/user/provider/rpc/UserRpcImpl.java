@@ -1,7 +1,7 @@
 package com.aiolos.live.user.provider.rpc;
 
 import com.aiolos.live.user.dto.UserDTO;
-import com.aiolos.live.user.interfaces.IUserRpc;
+import com.aiolos.live.user.interfaces.UserRpc;
 import com.aiolos.live.user.provider.service.LiveUserService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @DubboService
-public class UserRpcImpl implements IUserRpc {
+public class UserRpcImpl implements UserRpc {
 
     @Resource
     private LiveUserService liveUserService;

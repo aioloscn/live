@@ -1,7 +1,7 @@
 package com.aiolos.live.api.controller;
 
 import com.aiolos.live.user.dto.UserDTO;
-import com.aiolos.live.user.interfaces.IUserRpc;
+import com.aiolos.live.user.interfaces.UserRpc;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class UserController {
 
     @DubboReference
-    private IUserRpc userRpc;
+    private UserRpc userRpc;
 
     @GetMapping("/get-user-by-id")
     public UserDTO getUserById(Long userId) {
