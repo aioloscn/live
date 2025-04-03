@@ -1,0 +1,55 @@
+#spring:
+#  application:
+#    name: live-user-provider
+#  cloud:
+#    stream:
+#      function:
+#        definition: cacheAsyncDelete
+#      bindings:
+#        cacheAsyncDelete-in-0:
+#          destination: live-user-provider-cache-async-delete-topic
+#          group: cache-async-delete-group
+#          content-type: application/json
+#          consumer:
+#            max-attempts: 1 # 重试次数（包括首次消费）
+#            back-off-initial-interval: 1000 # 重试间隔时间（毫秒）
+#        cacheAsyncDelete-out-0:
+#          destination: live-user-provider-cache-async-delete-topic
+#          content-type: application/json
+#      rocketmq:
+#        binder:
+#          name-server: ${config.rocketmq.url}
+#          enable-msg-trace: true
+#  datasource:
+#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#    url: jdbc:shardingsphere:classpath:sharding-db.yaml
+#    hikari:
+#      pool-name: db-user
+#      idle-timeout: 300000
+#      minimum-idle: 10
+#      maximum-pool-size: 50
+#      connection-timeout: 30000
+#  data:
+#    redis:
+#      port: ${REDIS_PORT:6379}
+#      host: ${REDIS_URL:127.0.0.1}
+#      database: 0
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-idle: 20
+#          max-active: 50
+#
+#dubbo:
+#  protocol:
+#    name: dubbo
+#    port: 20880
+#  application:
+#    name: dubbo-live-user-provider
+#    qos-enable: false
+#  registry:
+#    address: nacos://${config.nacos.url}?namespace=live-test&username=nacos&password=nacos
+#
+#redis:
+#  key:
+#    application-name: ${spring.application.name}  # 绑定到 RedisKeyProperties
