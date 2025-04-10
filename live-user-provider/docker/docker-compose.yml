@@ -1,0 +1,41 @@
+version: '3'
+services:
+  live-user-provider-docker-1:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: 'live-user-provider-docker:latest'
+    environment:
+      - DUBBO_IP_TO_REGISTRY=192.168.0.102
+      - DUBBO_PORT_TO_BIND=20880            # 容器内 Dubbo 服务绑定的端口（需与 dubbo.protocol.port 一致）
+      - NACOS_HOST=192.168.0.102
+      - REDIS_HOST=192.168.0.102
+      - ROCKETMQ_HOST=192.168.0.102
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+    ports:
+      - '20880:20880'
+    extra_hosts:
+      - 'master.mysql.com:192.168.0.102'
+      - 'slave.mysql.com:192.168.0.102'
+    volumes:
+      - /tmp/logs/live-user-provider:/tmp/logs/live-user-provider
+    
+  live-user-provider-docker-2:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: 'live-user-provider-docker:latest'
+    environment:
+      - DUBBO_IP_TO_REGISTRY=192.168.0.102
+      - DUBBO_PORT_TO_BIND=20881
+      - NACOS_HOST=192.168.0.102
+      - REDIS_HOST=192.168.0.102
+      - ROCKETMQ_HOST=192.168.0.102
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+    ports:
+      - '20881:20881'
+    extra_hosts:
+      - 'master.mysql.com:192.168.0.102'
+      - 'slave.mysql.com:192.168.0.102'
+    volumes:
+      - /tmp/logs/live-user-provider:/tmp/logs/live-user-provider

@@ -1,0 +1,33 @@
+version: '3'
+services:
+  live-api-docker-1:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: 'live-api-docker:latest'
+    environment:
+      - server.port=8881
+      - spring.cloud.nacos.discovery.ip=192.168.0.102
+      - DUBBO_IP_TO_REGISTRY=192.168.0.102
+      - NACOS_HOST=192.168.0.102
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+    ports:
+      - '8881:8881'
+    volumes:
+      - /tmp/logs/live-api:/tmp/logs/live-api
+    
+  live-api-docker-2:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: 'live-api-docker:latest'
+    environment:
+      - server.port=8882
+      - spring.cloud.nacos.discovery.ip=192.168.0.102
+      - DUBBO_IP_TO_REGISTRY=192.168.0.102
+      - NACOS_HOST=192.168.0.102
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+    ports:
+      - '8882:8882'
+    volumes:
+      - /tmp/logs/live-api:/tmp/logs/live-api

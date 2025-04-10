@@ -18,7 +18,7 @@
 #          content-type: application/json
 #      rocketmq:
 #        binder:
-#          name-server: ${config.rocketmq.url}
+#          name-server: ${ROCKETMQ_HOST:127.0.0.1}:9876
 #          enable-msg-trace: true
 #  datasource:
 #    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
@@ -31,8 +31,8 @@
 #      connection-timeout: 30000
 #  data:
 #    redis:
-#      port: ${REDIS_PORT:6379}
-#      host: ${REDIS_URL:127.0.0.1}
+#      port: 6379
+#      host: ${REDIS_HOST:127.0.0.1}
 #      database: 0
 #      lettuce:
 #        pool:
@@ -48,7 +48,7 @@
 #    name: dubbo-live-user-provider
 #    qos-enable: false
 #  registry:
-#    address: nacos://${config.nacos.url}?namespace=live-test&username=nacos&password=nacos
+#    address: nacos://${NACOS_HOST:127.0.0.1}:8848?namespace=live-test&username=nacos&password=nacos
 #
 #redis:
 #  key:

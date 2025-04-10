@@ -1,6 +1,6 @@
 config:
   nacos:
-    url: ${NACOS_URL:127.0.0.1:8848}
+    host: ${NACOS_HOST:127.0.0.1}:8848
 
 spring:
   cloud:
@@ -8,13 +8,13 @@ spring:
       username: nacos
       password: nacos
       discovery:
-        server-addr: ${config.nacos.url}
+        server-addr: ${config.nacos.host}
         namespace: live-test
       config:
         import-check:
           enabled: false
         file-extension: yaml  # 当前服务启动后去nacos配置中心下获取配置文件的后缀
-        server-addr: ${config.nacos.url}
+        server-addr: ${config.nacos.host}
         namespace: live-test
   config:
     import:
