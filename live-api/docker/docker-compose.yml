@@ -14,7 +14,7 @@ services:
     ports:
       - '8881:8881'
     volumes:
-      - /tmp/logs/live-api:/tmp/logs/live-api
+      - D:\tmp\logs\live-api-1:/tmp/logs/live-api
     
   live-api-docker-2:
     build:
@@ -30,4 +30,4 @@ services:
     ports:
       - '8882:8882'
     volumes:
-      - /tmp/logs/live-api:/tmp/logs/live-api
+      - D:\tmp\logs\live-api-2:/tmp/logs/live-api

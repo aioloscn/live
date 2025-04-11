@@ -21,6 +21,10 @@
 
         <dependency>
             <groupId>com.aiolos</groupId>
+            <artifactId>live-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
             <artifactId>live-user-interface</artifactId>
         </dependency>
 
