@@ -9,14 +9,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.util.concurrent.CountDownLatch;
 
 @SpringBootApplication
 @EnableDubbo
 @EnableDiscoveryClient
-@ComponentScan("com.aiolos.live")
 @MapperScan("com.aiolos.live.mapper")
 public class IdGeneratorApplication implements CommandLineRunner {
 

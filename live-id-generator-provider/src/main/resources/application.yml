@@ -27,3 +27,11 @@ dubbo:
     qos-enable: false
   registry:
     address: nacos://${config.nacos.url}?namespace=live-test&username=nacos&password=nacos
+  provider:
+    filter: 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

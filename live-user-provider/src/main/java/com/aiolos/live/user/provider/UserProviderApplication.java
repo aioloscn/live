@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -19,7 +20,8 @@ import java.util.concurrent.CountDownLatch;
 @SpringBootApplication
 @EnableDubbo
 @EnableDiscoveryClient
-@ComponentScan("com.aiolos.live")
+@RefreshScope
+@ComponentScan("com.aiolos")    // service实现类不在当前package下，需要指定扫描
 @MapperScan("com.aiolos.live.mapper")
 public class UserProviderApplication implements CommandLineRunner {
 

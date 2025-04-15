@@ -2,14 +2,7 @@ config:
   nacos:
     host: ${NACOS_HOST:127.0.0.1}:8848
     
-server:
-  port: 8881
-  servlet:
-    context-path: /live/api
-
 spring:
-  application:
-    name: live-api
   cloud:
     nacos:
       username: nacos
@@ -17,13 +10,13 @@ spring:
       discovery:
         server-addr: ${config.nacos.host}
         namespace: live-test
-
-dubbo:
-  application:
-    name: dubbo-live-api
-    qos-enable: false
-  registry:
-    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos
-  consumer:
-    retries: 3
-    timeout: 5000 # 全局默认超时，控制消费者调用服务时的等待时间
+      config:
+        import-check:
+          enabled: false
+        file-extension: yaml
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+        group: DEFAULT_GROUP
+  config:
+    import: 
+      - optional:nacos:live-api-config.yaml
