@@ -11,8 +11,6 @@ spring:
         server-addr: ${config.nacos.host}
         namespace: live-test
       config:
-        import-check:
-          enabled: false
         file-extension: yaml
         server-addr: ${config.nacos.host}
         namespace: live-test

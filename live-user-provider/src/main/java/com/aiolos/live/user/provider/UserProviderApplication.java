@@ -10,7 +10,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -20,7 +19,6 @@ import java.util.concurrent.CountDownLatch;
 @SpringBootApplication
 @EnableDubbo
 @EnableDiscoveryClient
-@RefreshScope
 @ComponentScan("com.aiolos")    // service实现类不在当前package下，需要指定扫描
 @MapperScan("com.aiolos.live.mapper")
 public class UserProviderApplication implements CommandLineRunner {
@@ -30,7 +28,7 @@ public class UserProviderApplication implements CommandLineRunner {
     
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(UserProviderApplication.class);
-        springApplication.setWebApplicationType(WebApplicationType.NONE);
+        springApplication.setWebApplicationType(WebApplicationType.SERVLET);
         ConfigurableApplicationContext context = springApplication.run(args);
 
         // 检查Web服务器Bean是否存在

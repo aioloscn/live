@@ -6,9 +6,11 @@ import com.aiolos.live.model.po.User;
 import com.aiolos.live.service.UserService;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.provider.mq.producer.UpdateUserInfoProducer;
+import com.aiolos.live.user.provider.nacos.CustomizeConfigurationProperties;
 import com.aiolos.live.user.provider.service.LiveUserService;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class LiveUserServiceImpl implements LiveUserService {
 
@@ -36,12 +39,18 @@ public class LiveUserServiceImpl implements LiveUserService {
     private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
     @Autowired
     private UpdateUserInfoProducer updateUserInfoProducer;
+    
+    @Autowired
+    private CustomizeConfigurationProperties customizeConfigurationProperties;
 
     @Override
     public UserDTO getUserById(Long userId) {
         if (userId == null) {
             return null;
         }
+        
+        log.info("自动刷新配置中的值：{}", customizeConfigurationProperties.getTestRefresh());
+        
         Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
         if (obj != null) {
             return ConvertBeanUtil.convert(obj, UserDTO::new);
