@@ -1,4 +1,3 @@
-version: '3'
 services:
   live-api-docker-1:
     build:
@@ -7,9 +6,9 @@ services:
     image: 'live-api-docker:latest'
     environment:
       - server.port=8881
-      - spring.cloud.nacos.discovery.ip=192.168.0.102
-      - DUBBO_IP_TO_REGISTRY=192.168.0.102
-      - NACOS_HOST=192.168.0.102
+      - spring.cloud.nacos.discovery.ip=192.168.0.101 # 不同物理机必须明确指定IP
+      - DUBBO_IP_TO_REGISTRY=192.168.0.101
+      - NACOS_HOST=192.168.0.101
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
     ports:
       - '8881:8881'
@@ -23,9 +22,9 @@ services:
     image: 'live-api-docker:latest'
     environment:
       - server.port=8882
-      - spring.cloud.nacos.discovery.ip=192.168.0.102
-      - DUBBO_IP_TO_REGISTRY=192.168.0.102
-      - NACOS_HOST=192.168.0.102
+      - spring.cloud.nacos.discovery.ip=192.168.0.101
+      - DUBBO_IP_TO_REGISTRY=192.168.0.101
+      - NACOS_HOST=192.168.0.101
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
     ports:
       - '8882:8882'

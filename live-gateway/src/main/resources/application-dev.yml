@@ -1,0 +1,43 @@
+#server:
+#  port: 8700
+#
+#spring:
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#          lowerCaseServiceId: true
+#      routes:
+#        - id: live-api
+#          uri: lb://live-api
+#          predicates:
+#            - Path=/live/api/**
+#          filters:
+#            - StripPrefix=2
+#        - id: live-user
+#          uri: lb://live-user-provider
+#          predicates:
+#            - Path=/live/user/**
+#          filters:
+#            - StripPrefix=2
+#
+#        - id: auto-docs
+#          uri: lb://${serviceId}
+#          predicates:
+#            - Path=/{serviceId}/v3/api-docs
+#          filters:
+#            - RewritePath=/{serviceId}/v3/api-docs, /v3/api-docs
+#
+#        # 代理 Swagger 配置请求到网关自身
+#        - id: swagger-config
+#          uri: http://localhost:${server.port}  # 指向网关自己
+#          predicates:
+#            - Path=/v3/api-docs/swagger-config
+#
+#springdoc:
+#  swagger-ui:
+#    config-url: /v3/api-docs/swagger-config  # 指定动态配置入口
+#    path: /doc.html
+#  api-docs:
+#    enabled: false  # 禁用网关自身文档
