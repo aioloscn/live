@@ -1,5 +1,6 @@
 package com.aiolos.live.gateway.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,9 @@ import java.util.stream.Collectors;
 
 @RestController
 public class AggregatedOpenApiController {
+    
+    @Value("${spring.application.name}")
+    private String serviceId;
 
     private final DiscoveryClient discoveryClient;
 
@@ -19,7 +23,7 @@ public class AggregatedOpenApiController {
     @GetMapping("/v3/api-docs/swagger-config")
     public Map<String, Object> swaggerConfig() {
         List<Map<String, String>> groups = discoveryClient.getServices().stream()
-                .filter(service -> !service.equals("gateway"))  // 排除网关自身
+                .filter(service -> service.startsWith("live-") && !service.equals(serviceId))  // 排除网关自身
                 .filter(this::isServiceHealthy)  // 过滤健康状态
                 .map(service -> {
                     Map<String, String> group = new HashMap<>();

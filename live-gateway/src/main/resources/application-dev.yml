@@ -9,19 +9,6 @@
 #          enabled: true
 #          lowerCaseServiceId: true
 #      routes:
-#        - id: live-api
-#          uri: lb://live-api
-#          predicates:
-#            - Path=/live/api/**
-#          filters:
-#            - StripPrefix=2
-#        - id: live-user
-#          uri: lb://live-user-provider
-#          predicates:
-#            - Path=/live/user/**
-#          filters:
-#            - StripPrefix=2
-#
 #        - id: auto-docs
 #          uri: lb://${serviceId}
 #          predicates:
@@ -34,6 +21,19 @@
 #          uri: http://localhost:${server.port}  # 指向网关自己
 #          predicates:
 #            - Path=/v3/api-docs/swagger-config
+#
+#        - id: live-api
+#          uri: lb://live-api
+#          predicates:
+#            - Path=/live-api/**
+#          filters:
+#            - StripPrefix=1
+#        - id: live-user-provider
+#          uri: lb://live-user-provider
+#          predicates:
+#            - Path=/live-user-provider/**
+#          filters:
+#            - StripPrefix=1
 #
 #springdoc:
 #  swagger-ui:
