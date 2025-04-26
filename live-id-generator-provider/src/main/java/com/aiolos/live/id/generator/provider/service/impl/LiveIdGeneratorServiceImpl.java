@@ -1,6 +1,7 @@
 package com.aiolos.live.id.generator.provider.service.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.json.JSONUtil;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.live.enums.ServiceExceptionEnum;
 import com.aiolos.live.id.generator.provider.bo.LocalNonSeqIdBO;
@@ -67,6 +68,7 @@ public class LiveIdGeneratorServiceImpl implements LiveIdGeneratorService {
             return null;
         }
         refreshLocalSeqId(localSeqIdBO);
+        log.info("从有序队列取出: {}", returnId);
         return returnId;
     }
 
@@ -87,6 +89,7 @@ public class LiveIdGeneratorServiceImpl implements LiveIdGeneratorService {
             return null; 
         }
         refreshLocalNonSeqId(localNonSeqIdBO);
+        log.info("从无序队列取出: {}", nonSeqId);
         return nonSeqId;
     }
 
@@ -150,7 +153,7 @@ public class LiveIdGeneratorServiceImpl implements LiveIdGeneratorService {
                 ThreadUtil.sleep(Math.pow(2, retry) * 50);
                 po = idGenerateConfigService.getById(po.getId());
             } else {
-                
+                // 集群的话建议还是用无序，否则轮训获取到的id会跳跃
                 if (po.getIsSeq() == 1) {
                     LocalSeqIdBO bo = new LocalSeqIdBO();
                     bo.setId(po.getId());
@@ -158,6 +161,7 @@ public class LiveIdGeneratorServiceImpl implements LiveIdGeneratorService {
                     bo.setNextThreshold(nextThreshold);
                     bo.setCurrentStart(currentStart);
                     localSeqIdMap.put(po.getId(), bo);
+                    log.info("有序队列缓存ID: {}", JSONUtil.toJsonStr(localSeqIdMap));
                 } else {
                     LocalNonSeqIdBO bo = new LocalNonSeqIdBO();
                     bo.setId(po.getId());
@@ -171,6 +175,7 @@ public class LiveIdGeneratorServiceImpl implements LiveIdGeneratorService {
                     ConcurrentLinkedQueue<Long> idQueue = new ConcurrentLinkedQueue<>(idList);
                     bo.setIdQueue(idQueue);
                     localNonSeqIdMap.put(po.getId(), bo);
+                    log.info("无序队列缓存ID: {}", JSONUtil.toJsonStr(localNonSeqIdMap));
                 }
             }
         }

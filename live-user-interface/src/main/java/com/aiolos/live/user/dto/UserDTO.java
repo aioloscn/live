@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class UserDTO implements Serializable {
+    
+    private String token;
 
     private Long userId;
 
@@ -22,6 +24,9 @@ public class UserDTO implements Serializable {
 
     @Schema(description = "性别")
     private Byte sex;
+    
+    @Schema(description = "手机号")
+    private String phone;
 
     @Schema(description = "出生时间")
     private LocalDateTime bornTime;
@@ -34,5 +39,4 @@ public class UserDTO implements Serializable {
 
     private LocalDateTime createTime;
 
-    private LocalDateTime updateTime;
 }

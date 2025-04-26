@@ -5,7 +5,7 @@ public class UserProviderRedisKeyBuilder extends RedisKeyBuilder {
     private static final String USER_INFO_KEY = "userInfo";
     private static final String USER_TAG_LOCK_KEY = "userTagLock";
     private static final String USER_TAG_KEY = "userTag";
-    private static final long EXPIRE_7_DAYS = 60 * 60 * 24 * 7;
+    private static final String USER_TOKEN_KEY = "userToken";
 
     public UserProviderRedisKeyBuilder(RedisKeyProperties redisKeyProperties) {
         super(redisKeyProperties);
@@ -22,8 +22,8 @@ public class UserProviderRedisKeyBuilder extends RedisKeyBuilder {
     public String buildUserTagKey(Long userId) {
         return super.getPrefix() + USER_TAG_KEY + super.getSplit() + userId;
     }
-
-    public long get7DaysExpiration() {
-        return EXPIRE_7_DAYS;
+    
+    public String buildUserTokenKey(String token) {
+        return super.getPrefix() + USER_TOKEN_KEY + super.getSplit() + token;
     }
 }

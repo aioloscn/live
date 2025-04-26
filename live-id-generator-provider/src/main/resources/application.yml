@@ -21,7 +21,7 @@ spring:
 dubbo:
   protocol:
     name: dubbo
-    port: 20880
+    port: 21881
   application:
     name: dubbo-live-id-generator-provider
     qos-enable: false

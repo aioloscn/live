@@ -1,17 +1,21 @@
 package com.aiolos.live.user.provider.service;
 
 import com.aiolos.live.user.dto.UserDTO;
+import com.aiolos.live.user.provider.model.bo.LoginBO;
+import com.aiolos.live.user.provider.model.vo.UserVO;
 
 import java.util.List;
 import java.util.Map;
 
 public interface LiveUserService {
 
-    UserDTO getUserById(Long userId);
+    UserVO login(LoginBO loginBO);
+
+    UserVO getUserById(Long userId);
 
     void insertUser(UserDTO userDTO);
 
     void updateUserInfo(UserDTO userDTO);
 
-    Map<Long, UserDTO> batchQueryUserInfo(List<Long> userIds);
+    Map<Long, UserVO> batchQueryUserInfo(List<Long> userIds);
 }

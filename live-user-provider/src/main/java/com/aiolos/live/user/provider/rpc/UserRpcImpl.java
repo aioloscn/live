@@ -1,13 +1,18 @@
 package com.aiolos.live.user.provider.rpc;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.interfaces.UserRpc;
+import com.aiolos.live.user.provider.model.vo.UserVO;
 import com.aiolos.live.user.provider.service.LiveUserService;
+import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @DubboService
 public class UserRpcImpl implements UserRpc {
@@ -17,7 +22,7 @@ public class UserRpcImpl implements UserRpc {
     
     @Override
     public UserDTO getUserById(Long userId) {
-        return liveUserService.getUserById(userId);
+        return ConvertBeanUtil.convert(liveUserService.getUserById(userId), UserDTO::new);
     }
 
     @Override
@@ -32,6 +37,10 @@ public class UserRpcImpl implements UserRpc {
 
     @Override
     public Map<Long, UserDTO> batchQueryUserInfo(List<Long> userIds) {
-        return liveUserService.batchQueryUserInfo(userIds);
+        Map<Long, UserVO> userVOMap = liveUserService.batchQueryUserInfo(userIds);
+        if (CollectionUtil.isEmpty(userVOMap)) {
+            return Maps.newHashMap();
+        }
+        return userVOMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> ConvertBeanUtil.convert(entry.getValue(), UserDTO::new)));
     }
 }

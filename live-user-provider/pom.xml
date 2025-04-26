@@ -43,6 +43,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-user-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-id-generator-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.dubbo</groupId>

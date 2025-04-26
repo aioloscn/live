@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "redis.key")
+@ConfigurationProperties(prefix = "spring.application")
 public class RedisKeyProperties {
 
-    private String applicationName;
+    private String name;
 }

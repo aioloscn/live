@@ -1,9 +1,6 @@
 package com.aiolos.live.common.config;
 
-import com.aiolos.live.common.keys.RedisKeyBuilder;
-import com.aiolos.live.common.keys.RedisKeyLoadMatch;
-import com.aiolos.live.common.keys.RedisKeyProperties;
-import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -22,5 +19,11 @@ public class CommonRedisAutoConfiguration {
     @Conditional(RedisKeyLoadMatch.class)
     public UserProviderRedisKeyBuilder userRedisKeyBuilder(RedisKeyProperties properties) {
         return new UserProviderRedisKeyBuilder(properties);
+    }
+
+    @Bean
+    @Conditional(RedisKeyLoadMatch.class)
+    public MsgProviderRedisBuilder msgProviderRedisBuilder(RedisKeyProperties properties) {
+        return new MsgProviderRedisBuilder(properties);
     }
 }

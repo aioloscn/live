@@ -54,6 +54,12 @@ public class User implements Serializable {
     private Byte sex;
 
     /**
+     * 手机号
+     */
+    @TableField("phone")
+    private String phone;
+
+    /**
      * 出生时间
      */
     @TableField("born_time")
@@ -86,6 +92,8 @@ public class User implements Serializable {
     public static final String TRUE_NAME = "true_name";
 
     public static final String SEX = "sex";
+    
+    public static final String PHONE = "phone";
 
     public static final String BORN_TIME = "born_time";
 
