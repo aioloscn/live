@@ -2,6 +2,7 @@ package com.aiolos.live.msg.provider.service.impl;
 
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
+import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.common.keys.MsgProviderRedisBuilder;
 import com.aiolos.live.enums.MsgSendResultEnum;
 import com.aiolos.live.model.po.SmsRecord;
@@ -29,9 +30,9 @@ public class LiveSmsServiceImpl implements LiveSmsService {
     private MsgProviderRedisBuilder msgProviderRedisBuilder;
     
     @Override
-    public MsgSendResultEnum sendSms(String phone) {
+    public CommonResponse sendSms(String phone) {
         if (StringUtils.isBlank(phone) || phone.length() != 11) {
-            return MsgSendResultEnum.PARAM_ERROR;
+            return CommonResponse.error(MsgSendResultEnum.PARAM_ERROR.getCode(), MsgSendResultEnum.PARAM_ERROR.getDesc());
         }
 
         if (!redisTemplate.opsForValue().setIfAbsent(msgProviderRedisBuilder.buildPreventRepeatSendingKey(phone), 1, 60, TimeUnit.SECONDS)) {
@@ -52,7 +53,7 @@ public class LiveSmsServiceImpl implements LiveSmsService {
             smsRecord.setCode(code);
             smsRecordService.save(smsRecord);
         });
-        
-        return MsgSendResultEnum.SUCCESS;
+
+        return CommonResponse.ok(MsgSendResultEnum.SUCCESS);
     }
 }

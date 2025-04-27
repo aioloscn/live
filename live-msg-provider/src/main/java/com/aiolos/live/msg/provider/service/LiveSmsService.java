@@ -1,8 +1,8 @@
 package com.aiolos.live.msg.provider.service;
 
-import com.aiolos.live.enums.MsgSendResultEnum;
+import com.aiolos.common.model.response.CommonResponse;
 
 public interface LiveSmsService {
     
-    MsgSendResultEnum sendSms(String phone);
+    CommonResponse sendSms(String phone);
 }

@@ -1,6 +1,7 @@
 package com.aiolos.live.api.controller;
 
-import com.aiolos.live.enums.MsgSendResultEnum;
+import com.aiolos.common.enums.errors.ErrorEnum;
+import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.msg.interfaces.SmsRpc;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -17,12 +18,12 @@ public class SmsController {
     private SmsRpc smsRpc;
 
     @PostMapping("/send-sms")
-    MsgSendResultEnum sendSms(String phone) {
+    CommonResponse sendSms(String phone) {
         try {
             return smsRpc.sendSms(phone);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return MsgSendResultEnum.FAIL;
+        return CommonResponse.error(ErrorEnum.UNKNOWN_ERROR);
     }
 }

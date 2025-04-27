@@ -14,5 +14,9 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-enums</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>common-model</artifactId>
+        </dependency>
     </dependencies>
 </project>

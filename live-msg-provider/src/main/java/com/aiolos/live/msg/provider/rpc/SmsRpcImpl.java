@@ -1,6 +1,6 @@
 package com.aiolos.live.msg.provider.rpc;
 
-import com.aiolos.live.enums.MsgSendResultEnum;
+import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.msg.interfaces.SmsRpc;
 import com.aiolos.live.msg.provider.service.LiveSmsService;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ public class SmsRpcImpl implements SmsRpc {
     private LiveSmsService liveSmsService;
     
     @Override
-    public MsgSendResultEnum sendSms(String phone) {
+    public CommonResponse sendSms(String phone) {
         return liveSmsService.sendSms(phone);
     }
 }

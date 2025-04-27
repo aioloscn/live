@@ -3,9 +3,11 @@ package com.aiolos.live.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
 @AllArgsConstructor
-public enum MsgSendResultEnum {
+public enum MsgSendResultEnum implements Serializable {
     
     SUCCESS(1, "发送成功"),
     FAIL(2, "发送失败"),

@@ -1,6 +1,6 @@
 package com.aiolos.live.msg.interfaces;
 
-import com.aiolos.live.enums.MsgSendResultEnum;
+import com.aiolos.common.model.response.CommonResponse;
 
 public interface SmsRpc {
 
@@ -9,5 +9,5 @@ public interface SmsRpc {
      * @param phone
      * @return
      */
-    MsgSendResultEnum sendSms(String phone);
+    CommonResponse sendSms(String phone);
 }
