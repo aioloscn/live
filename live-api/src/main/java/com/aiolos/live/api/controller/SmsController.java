@@ -1,6 +1,5 @@
 package com.aiolos.live.api.controller;
 
-import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.msg.interfaces.SmsRpc;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,11 +18,6 @@ public class SmsController {
 
     @PostMapping("/send-sms")
     CommonResponse sendSms(String phone) {
-        try {
-            return smsRpc.sendSms(phone);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return CommonResponse.error(ErrorEnum.UNKNOWN_ERROR);
+        return smsRpc.sendSms(phone);
     }
 }
