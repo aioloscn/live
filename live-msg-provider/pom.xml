@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>com.aiolos</groupId>
+            <artifactId>live-dubbo-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
             <artifactId>live-model</artifactId>
         </dependency>
         <dependency>

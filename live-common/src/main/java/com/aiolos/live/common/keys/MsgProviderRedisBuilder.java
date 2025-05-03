@@ -14,6 +14,6 @@ public class MsgProviderRedisBuilder extends RedisKeyBuilder {
     }
     
     public String buildSmsLoginCodeKey(String phone) {
-        return super.getPrefix() + SMS_LOGIN_CODE_KEY + super.getSplit() + phone;
+        return SMS_LOGIN_CODE_KEY + super.getSplit() + phone;
     }
 }

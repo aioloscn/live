@@ -15,6 +15,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ public class LiveSmsServiceImpl implements LiveSmsService {
     @Resource
     private MsgProviderRedisBuilder msgProviderRedisBuilder;
     
+    @Transactional
     @Override
     public CommonResponse sendSms(String phone) {
         if (StringUtils.isBlank(phone) || phone.length() != 11) {
@@ -47,13 +49,14 @@ public class LiveSmsServiceImpl implements LiveSmsService {
         // 发送短信
         MsgThreadPoolManager.commonAsyncPool.execute(() -> {
             // TODO 接收SmsUtil发送结果，然后保存记录
+            // 同一个类内部的非事务方法调用本类中的事务方法，事务失效
+            // 数据库操作不能放线程池中，不然主线程抛出异常无法回滚异步线程中的数据库操作
             log.info("已向手机号: {} 发送验证码: {}", phone, code);
-            SmsRecord smsRecord = new SmsRecord();
-            smsRecord.setPhone(phone);
-            smsRecord.setCode(code);
-            smsRecordService.save(smsRecord);
         });
-
+        SmsRecord smsRecord = new SmsRecord();
+        smsRecord.setPhone(phone);
+        smsRecord.setCode(code);
+        smsRecordService.save(smsRecord);
         return CommonResponse.ok(MsgSendResultEnum.SUCCESS);
     }
 }

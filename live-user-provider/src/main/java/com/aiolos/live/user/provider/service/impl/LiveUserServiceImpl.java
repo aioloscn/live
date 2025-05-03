@@ -1,5 +1,6 @@
 package com.aiolos.live.user.provider.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
@@ -63,7 +64,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
 
         String smsRedisKey = msgProviderRedisBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
-        String cacheCode = (String) redisTemplate.opsForValue().get(smsRedisKey);
+        String cacheCode = redisTemplate.opsForValue().get(smsRedisKey).toString();
         if (StringUtils.isBlank(cacheCode)) {
             ExceptionUtil.throwException(ErrorEnum.SMS_CODE_EXPIRED);
         }
@@ -73,16 +74,17 @@ public class LiveUserServiceImpl implements LiveUserService {
 
         // 未注册则注册
         UserVO userVO;
-        User user = userService.lambdaQuery().eq(User::getPhone, loginBO.getPhone()).one();
-        if (user == null) {
+        List<User> userList = userService.lambdaQuery().eq(User::getPhone, loginBO.getPhone()).list();
+        if (CollectionUtil.isEmpty(userList)) {
             User newUser = new User();
             newUser.setUserId(idGeneratorRpc.getSeqId(IdPolicyEnum.USER_ID_POLICY.getPrimaryKey()));
             newUser.setNickName("用户_" + RandomUtils.secure().randomInt(10000000, 99999999));
             newUser.setPhone(loginBO.getPhone());
             userVO = ConvertBeanUtil.convert(newUser, UserVO::new);
+            // 得保证主线程不会有异常
             UserThreadPoolManager.commonAsyncPool.execute(() -> userService.save(newUser));
         } else {
-            userVO = ConvertBeanUtil.convert(user, UserVO::new);
+            userVO = ConvertBeanUtil.convert(userList.get(0), UserVO::new);
         }
 
         String token = UUID.randomUUID().toString();

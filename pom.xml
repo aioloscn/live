@@ -21,6 +21,7 @@
     <module>live-gateway</module>
     <module>live-msg-interface</module>
     <module>live-msg-provider</module>
+    <module>live-dubbo-common</module>
   </modules>
 
   <properties>
@@ -32,6 +33,7 @@
     <live-api.version>1.0-SNAPSHOT</live-api.version>
     <live-gateway.version>1.0-SNAPSHOT</live-gateway.version>
     <live-common.version>1.0-SNAPSHOT</live-common.version>
+    <live-dubbo-common.version>1.0-SNAPSHOT</live-dubbo-common.version>
     <live-enums.version>1.0-SNAPSHOT</live-enums.version>
     <live-model.version>1.0-SNAPSHOT</live-model.version>
     <live-service.version>1.0-SNAPSHOT</live-service.version>
@@ -61,6 +63,11 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-common</artifactId>
         <version>${live-common.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-dubbo-common</artifactId>
+        <version>${live-dubbo-common.version}</version>
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>
