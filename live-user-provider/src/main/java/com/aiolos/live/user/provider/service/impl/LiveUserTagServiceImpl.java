@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
     @Autowired
     private UpdateUserInfoProducer updateUserInfoProducer;
     
+    @Transactional
     @Override
     public boolean setTag(Long userId, UserTagEnum userTagEnum) {
 
@@ -74,6 +76,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
         return updated;
     }
 
+    @Transactional
     @Override
     public boolean cancelTag(Long userId, UserTagEnum userTagEnum) {
         

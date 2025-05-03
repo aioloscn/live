@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -135,6 +136,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
     }
 
+    @Transactional
     @Override
     public Map<Long, UserVO> batchQueryUserInfo(List<Long> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
