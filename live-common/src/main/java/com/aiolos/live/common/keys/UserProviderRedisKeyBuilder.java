@@ -6,6 +6,7 @@ public class UserProviderRedisKeyBuilder extends RedisKeyBuilder {
     private static final String USER_TAG_LOCK_KEY = "userTagLock";
     private static final String USER_TAG_KEY = "userTag";
     private static final String USER_TOKEN_KEY = "userToken";
+    private static final String USER_PHONE_KEY = "userPhone";
 
     public UserProviderRedisKeyBuilder(RedisKeyProperties redisKeyProperties) {
         super(redisKeyProperties);
@@ -25,5 +26,9 @@ public class UserProviderRedisKeyBuilder extends RedisKeyBuilder {
     
     public String buildUserTokenKey(String token) {
         return super.getPrefix() + USER_TOKEN_KEY + super.getSplit() + token;
+    }
+    
+    public String buildUserPhoneKey(String phone) {
+        return super.getPrefix() + USER_PHONE_KEY + super.getSplit() + phone;
     }
 }

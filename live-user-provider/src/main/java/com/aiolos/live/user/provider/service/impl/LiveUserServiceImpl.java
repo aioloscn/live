@@ -1,6 +1,5 @@
 package com.aiolos.live.user.provider.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
@@ -64,27 +63,28 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
 
         String smsRedisKey = msgProviderRedisBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
-        String cacheCode = redisTemplate.opsForValue().get(smsRedisKey).toString();
-        if (StringUtils.isBlank(cacheCode)) {
+        Object redisVal = redisTemplate.opsForValue().get(smsRedisKey);
+        if (redisVal == null) {
             ExceptionUtil.throwException(ErrorEnum.SMS_CODE_EXPIRED);
         }
+
+        String cacheCode = redisVal.toString();
         if (!cacheCode.equals(loginBO.getCode())) {
             ExceptionUtil.throwException(ErrorEnum.SMS_CODE_INCORRECT);
         }
 
         // 未注册则注册
-        UserVO userVO;
-        List<User> userList = userService.lambdaQuery().eq(User::getPhone, loginBO.getPhone()).list();
-        if (CollectionUtil.isEmpty(userList)) {
+        UserVO userVO = this.queryByPhone(loginBO.getPhone());
+        if (userVO == null) {
             User newUser = new User();
-            newUser.setUserId(idGeneratorRpc.getSeqId(IdPolicyEnum.USER_ID_POLICY.getPrimaryKey()));
+            // 即便获取不到分布式id，mybatis-plus的@TableId("user_id")会隐式创建一个Long类型id，type=IdType.NONE也一样
+            // 如果ShardingSphere有配置keyGenerateStrategy也会自动生成主键，可以设置雪花算法
+            newUser.setUserId(idGeneratorRpc.getNonSeqId(IdPolicyEnum.USER_ID_POLICY.getPrimaryKey()));
             newUser.setNickName("用户_" + RandomUtils.secure().randomInt(10000000, 99999999));
             newUser.setPhone(loginBO.getPhone());
             userVO = ConvertBeanUtil.convert(newUser, UserVO::new);
             // 得保证主线程不会有异常
             UserThreadPoolManager.commonAsyncPool.execute(() -> userService.save(newUser));
-        } else {
-            userVO = ConvertBeanUtil.convert(userList.get(0), UserVO::new);
         }
 
         String token = UUID.randomUUID().toString();
@@ -93,6 +93,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userVO.getUserId()), userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
 
         redisTemplate.delete(smsRedisKey);
+        redisTemplate.delete(userProviderRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
         return userVO;
     }
 
@@ -102,15 +103,20 @@ public class LiveUserServiceImpl implements LiveUserService {
             return null;
         }
         
-        log.info("自动刷新配置中的值：{}", customizeConfigurationProperties.getTestRefresh());
-        
-        Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
+        log.info("测试自动刷新配置中的值：{}", customizeConfigurationProperties.getTestRefresh());
+
+        String userKey = userProviderRedisKeyBuilder.buildUserInfoKey(userId);
+        Object obj = redisTemplate.opsForValue().get(userKey);
         if (obj != null) {
-            return ConvertBeanUtil.convert(obj, UserVO::new);
+            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO::new);
+            return userVO.getUserId() != null ? userVO : null;
         }
         UserVO userVO = ConvertBeanUtil.convert(userService.getById(userId), UserVO::new);
         if (userVO != null) {
-            redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userId), userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(userKey, userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+        } else {
+            // 缓存空值
+            redisTemplate.opsForValue().set(userKey, new UserVO(), 60, TimeUnit.SECONDS);
         }
         return userVO;
     }
@@ -187,5 +193,32 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
 
         return dbQueryResult.stream().collect(Collectors.toMap(UserVO::getUserId, Function.identity()));
+    }
+
+    @Override
+    public UserVO queryByPhone(String phone) {
+        if (StringUtils.isBlank(phone))
+            return null;
+        String key = userProviderRedisKeyBuilder.buildUserPhoneKey(phone);
+        Object obj = redisTemplate.opsForValue().get(key);
+        if (obj != null) {
+            // 可能是空缓存
+            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO::new);
+            if (userVO.getUserId() == null) {
+                return null;
+            }
+            return userVO;
+        }
+        
+        User user = userService.lambdaQuery().eq(User::getPhone, phone).oneOpt().orElse(null);
+        if (user != null) {
+            UserVO userVO = ConvertBeanUtil.convert(user, UserVO::new);
+            redisTemplate.opsForValue().set(key, userVO, 30, TimeUnit.MINUTES);
+            return userVO;
+        }
+        
+        // 防止缓存穿透，设置空缓存
+        redisTemplate.opsForValue().set(key, new UserVO(), 60, TimeUnit.SECONDS);
+        return null;
     }
 }

@@ -18,4 +18,6 @@ public interface LiveUserService {
     void updateUserInfo(UserDTO userDTO);
 
     Map<Long, UserVO> batchQueryUserInfo(List<Long> userIds);
+
+    UserVO queryByPhone(String phone);
 }
