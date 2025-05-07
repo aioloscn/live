@@ -18,6 +18,8 @@ import com.aiolos.live.user.provider.nacos.CustomizeConfigurationProperties;
 import com.aiolos.live.user.provider.service.LiveUserService;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +58,7 @@ public class LiveUserServiceImpl implements LiveUserService {
     private CustomizeConfigurationProperties customizeConfigurationProperties;
 
     @Override
-    public UserVO login(LoginBO loginBO) {
+    public UserVO login(LoginBO loginBO, HttpServletResponse response) {
         
         if (StringUtils.isBlank(loginBO.getCode()) || StringUtils.isBlank(loginBO.getCode())) {
             ExceptionUtil.throwException(ErrorEnum.BIND_EXCEPTION_ERROR);
@@ -88,12 +90,18 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
 
         String token = UUID.randomUUID().toString();
-        userVO.setToken(token);
         redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserTokenKey(token), userVO.getUserId(), userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userVO.getUserId()), userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
 
         redisTemplate.delete(smsRedisKey);
         redisTemplate.delete(userProviderRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
+
+        Cookie cookie = new Cookie("token", token);
+        cookie.setDomain("live.aiolos.com");
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 30);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.addCookie(cookie);
         return userVO;
     }
 
@@ -210,7 +218,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             return userVO;
         }
         
-        User user = userService.lambdaQuery().eq(User::getPhone, phone).oneOpt().orElse(null);
+        User user = userService.lambdaQuery().eq(User::getPhone, phone).one();
         if (user != null) {
             UserVO userVO = ConvertBeanUtil.convert(user, UserVO::new);
             redisTemplate.opsForValue().set(key, userVO, 30, TimeUnit.MINUTES);

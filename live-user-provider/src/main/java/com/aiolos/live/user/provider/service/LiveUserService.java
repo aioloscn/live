@@ -3,13 +3,14 @@ package com.aiolos.live.user.provider.service;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.provider.model.bo.LoginBO;
 import com.aiolos.live.user.provider.model.vo.UserVO;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
 
 public interface LiveUserService {
 
-    UserVO login(LoginBO loginBO);
+    UserVO login(LoginBO loginBO, HttpServletResponse response);
 
     UserVO getUserById(Long userId);
 

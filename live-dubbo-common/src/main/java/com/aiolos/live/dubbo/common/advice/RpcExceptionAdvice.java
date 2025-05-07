@@ -23,7 +23,7 @@ public class RpcExceptionAdvice {
     @ExceptionHandler(value = RpcException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public CommonResponse handlerTokenInvalidException(Exception e) {
+    public CommonResponse handlerRpcException(Exception e) {
         if (e instanceof RpcException) {
             log.error("dubbo服务调用异常: {}", e.getMessage(), e);
             if (e.getCause() != null && e.getCause() instanceof TimeoutException) {

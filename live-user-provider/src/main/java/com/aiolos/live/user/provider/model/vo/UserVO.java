@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserVO {
 
-    private String token;
-
     private Long userId;
 
     @Schema(description = "昵称")

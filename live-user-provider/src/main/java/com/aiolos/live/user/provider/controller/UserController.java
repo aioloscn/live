@@ -4,6 +4,7 @@ import com.aiolos.live.user.provider.model.bo.LoginBO;
 import com.aiolos.live.user.provider.model.vo.UserVO;
 import com.aiolos.live.user.provider.service.LiveUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class UserController {
     private final LiveUserService liveUserService;
 
     @PostMapping("/login")
-    public UserVO login(@RequestBody LoginBO loginBO) {
-        return liveUserService.login(loginBO);
+    public UserVO login(@RequestBody LoginBO loginBO, HttpServletResponse response) {
+        return liveUserService.login(loginBO, response);
     }
 }

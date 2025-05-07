@@ -4,6 +4,24 @@
 #spring:
 #  cloud:
 #    gateway:
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allow-credentials: true
+#            allowed-origin-patterns:
+#              - "http://127.0.0.1:*"
+#              - "http://localhost:*"
+#              - "http://*.aiolos.com"
+#            allowed-methods:
+#              - GET
+#              - POST
+#              - OPTIONS
+#            allowed-headers: "*"
+#            max-age: 86400  # 预检缓存 24 小时（单位：秒）
+#            # 解决 OPTIONS 请求被 403 拦截
+#        add-to-simple-url-handler-mapping: true
+#      default-filters:
+#        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
 #      discovery:
 #        locator:
 #          enabled: true

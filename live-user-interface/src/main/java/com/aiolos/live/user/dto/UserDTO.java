@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserDTO implements Serializable {
     
-    private String token;
-
     private Long userId;
 
     @Schema(description = "昵称")
