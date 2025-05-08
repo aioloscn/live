@@ -11,7 +11,7 @@
 #            allowed-origin-patterns:
 #              - "http://127.0.0.1:*"
 #              - "http://localhost:*"
-#              - "http://*.aiolos.com"
+#              - "http://*.aiolos.com:*"
 #            allowed-methods:
 #              - GET
 #              - POST
@@ -59,3 +59,16 @@
 #    path: /doc.html
 #  api-docs:
 #    enabled: false  # 禁用网关自身文档
+#
+#dubbo:
+#  application:
+#    name: dubbo-live-gateway
+#    qos-enable: false
+#  registry:
+#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
+#
+#whitelist:
+#  live:
+#    urls:
+#      - /live-api/sms/send-sms
+#      - /live-user-provider/user/login

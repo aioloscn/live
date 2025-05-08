@@ -3,7 +3,7 @@ package com.aiolos.live.msg.provider.service.impl;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.model.response.CommonResponse;
-import com.aiolos.live.common.keys.MsgProviderRedisBuilder;
+import com.aiolos.live.common.keys.builder.MsgProviderRedisBuilder;
 import com.aiolos.live.enums.MsgSendResultEnum;
 import com.aiolos.live.model.po.SmsRecord;
 import com.aiolos.live.msg.provider.config.MsgThreadPoolManager;

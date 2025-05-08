@@ -3,8 +3,8 @@ package com.aiolos.live.user.provider.service.impl;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
-import com.aiolos.live.common.keys.MsgProviderRedisBuilder;
-import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.MsgProviderRedisBuilder;
+import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
 import com.aiolos.live.id.generator.enums.IdPolicyEnum;
 import com.aiolos.live.id.generator.interfaces.IdGeneratorRpc;
 import com.aiolos.live.model.po.User;
@@ -14,8 +14,8 @@ import com.aiolos.live.user.provider.config.UserThreadPoolManager;
 import com.aiolos.live.user.provider.model.bo.LoginBO;
 import com.aiolos.live.user.provider.model.vo.UserVO;
 import com.aiolos.live.user.provider.mq.producer.UpdateUserInfoProducer;
-import com.aiolos.live.user.provider.nacos.CustomizeConfigurationProperties;
 import com.aiolos.live.user.provider.service.LiveUserService;
+import com.alibaba.nacos.common.utils.ConvertUtils;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
@@ -54,8 +54,21 @@ public class LiveUserServiceImpl implements LiveUserService {
     @DubboReference
     private IdGeneratorRpc idGeneratorRpc;
     
-    @Autowired
-    private CustomizeConfigurationProperties customizeConfigurationProperties;
+    @Override
+    public String createToken(Long userId) {
+        String token = UUID.randomUUID().toString();
+        redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserTokenKey(token), userId, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+        return token;
+    }
+
+    @Override
+    public Long getUserIdByToken(String token) {
+        Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTokenKey(token));
+        if (obj != null) {
+            return ConvertUtils.toLong(obj);
+        }
+        return null;
+    }
 
     @Override
     public UserVO login(LoginBO loginBO, HttpServletResponse response) {
@@ -89,14 +102,13 @@ public class LiveUserServiceImpl implements LiveUserService {
             UserThreadPoolManager.commonAsyncPool.execute(() -> userService.save(newUser));
         }
 
-        String token = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserTokenKey(token), userVO.getUserId(), userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userVO.getUserId()), userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
 
         redisTemplate.delete(smsRedisKey);
         redisTemplate.delete(userProviderRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
 
-        Cookie cookie = new Cookie("token", token);
+        String token = this.createToken(userVO.getUserId());
+        Cookie cookie = new Cookie("live-token", token);
         cookie.setDomain("live.aiolos.com");
         cookie.setPath("/");
         cookie.setMaxAge(60 * 60 * 24 * 30);
@@ -111,8 +123,6 @@ public class LiveUserServiceImpl implements LiveUserService {
             return null;
         }
         
-        log.info("测试自动刷新配置中的值：{}", customizeConfigurationProperties.getTestRefresh());
-
         String userKey = userProviderRedisKeyBuilder.buildUserInfoKey(userId);
         Object obj = redisTemplate.opsForValue().get(userKey);
         if (obj != null) {

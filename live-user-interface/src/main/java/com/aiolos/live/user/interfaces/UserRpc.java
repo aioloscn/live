@@ -7,6 +7,10 @@ import java.util.Map;
 
 public interface UserRpc {
 
+    String createToken(Long userId);
+    
+    Long getUserIdByToken(String token);
+
     UserDTO getUserById(Long userId);
 
     void insertUser(UserDTO userDTO);

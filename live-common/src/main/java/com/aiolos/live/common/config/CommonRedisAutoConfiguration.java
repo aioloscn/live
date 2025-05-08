@@ -1,6 +1,9 @@
 package com.aiolos.live.common.config;
 
 import com.aiolos.live.common.keys.*;
+import com.aiolos.live.common.keys.builder.MsgProviderRedisBuilder;
+import com.aiolos.live.common.keys.builder.RedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;

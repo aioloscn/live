@@ -1,6 +1,6 @@
 package com.aiolos.live.user.provider.mq.consumer;
 
-import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
 import com.aiolos.live.common.message.UserCacheMessage;
 import com.aiolos.live.enums.UserCacheEnum;
 import jakarta.annotation.Resource;

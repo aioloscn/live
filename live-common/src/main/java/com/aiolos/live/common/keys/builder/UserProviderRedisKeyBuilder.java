@@ -1,4 +1,6 @@
-package com.aiolos.live.common.keys;
+package com.aiolos.live.common.keys.builder;
+
+import com.aiolos.live.common.keys.RedisKeyProperties;
 
 public class UserProviderRedisKeyBuilder extends RedisKeyBuilder {
 

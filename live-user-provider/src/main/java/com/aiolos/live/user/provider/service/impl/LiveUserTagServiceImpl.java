@@ -2,7 +2,7 @@ package com.aiolos.live.user.provider.service.impl;
 
 import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.common.constants.UserTagFieldNameConstants;
-import com.aiolos.live.common.keys.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
 import com.aiolos.live.enums.UserTagEnum;
 import com.aiolos.live.model.po.UserTag;
 import com.aiolos.live.service.UserTagService;
