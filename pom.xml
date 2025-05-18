@@ -22,6 +22,9 @@
     <module>live-msg-interface</module>
     <module>live-msg-provider</module>
     <module>live-dubbo-common</module>
+    <module>live-im-interface</module>
+    <module>live-im-core-server</module>
+    <module>live-im-provider</module>
   </modules>
 
   <properties>
@@ -43,6 +46,9 @@
     <live-id-generator-provider.version>1.0-SNAPSHOT</live-id-generator-provider.version>
     <live-msg-interface.version>1.0-SNAPSHOT</live-msg-interface.version>
     <live-msg-provider.version>1.0-SNAPSHOT</live-msg-provider.version>
+    <live-im-interface.version>1.0-SNAPSHOT</live-im-interface.version>
+    <live-im-core-server.version>1.0-SNAPSHOT</live-im-core-server.version>
+    <live-im-provider.version>1.0-SNAPSHOT</live-im-provider.version>
   </properties>
 
   <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
@@ -98,6 +104,21 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-msg-interface</artifactId>
         <version>${live-msg-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-im-interface</artifactId>
+        <version>${live-im-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-im-core-server</artifactId>
+        <version>${live-im-core-server.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-im-provider</artifactId>
+        <version>${live-im-provider.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -29,7 +29,7 @@ public class UserProviderApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(UserProviderApplication.class);
         springApplication.setWebApplicationType(WebApplicationType.SERVLET);
-       springApplication.run(args);
+        springApplication.run(args);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.aiolos.live.user.provider.service.impl;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
-import com.aiolos.live.common.keys.builder.MsgProviderRedisBuilder;
+import com.aiolos.live.common.keys.builder.MsgProviderRedisKeyBuilder;
 import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
 import com.aiolos.live.id.generator.enums.IdPolicyEnum;
 import com.aiolos.live.id.generator.interfaces.IdGeneratorRpc;
@@ -15,7 +15,6 @@ import com.aiolos.live.user.provider.model.bo.LoginBO;
 import com.aiolos.live.user.provider.model.vo.UserVO;
 import com.aiolos.live.user.provider.mq.producer.UpdateUserInfoProducer;
 import com.aiolos.live.user.provider.service.LiveUserService;
-import com.alibaba.nacos.common.utils.ConvertUtils;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
@@ -48,7 +47,7 @@ public class LiveUserServiceImpl implements LiveUserService {
     @Resource
     private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
     @Resource
-    private MsgProviderRedisBuilder msgProviderRedisBuilder;
+    private MsgProviderRedisKeyBuilder msgProviderRedisKeyBuilder;
     @Autowired
     private UpdateUserInfoProducer updateUserInfoProducer;
     @DubboReference
@@ -64,10 +63,13 @@ public class LiveUserServiceImpl implements LiveUserService {
     @Override
     public Long getUserIdByToken(String token) {
         Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTokenKey(token));
-        if (obj != null) {
-            return ConvertUtils.toLong(obj);
+        if (obj instanceof Integer) {
+            return ((Integer) obj).longValue();
+        } else if (obj instanceof Long) {
+            return (Long) obj;
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -77,7 +79,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             ExceptionUtil.throwException(ErrorEnum.BIND_EXCEPTION_ERROR);
         }
 
-        String smsRedisKey = msgProviderRedisBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
+        String smsRedisKey = msgProviderRedisKeyBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
         Object redisVal = redisTemplate.opsForValue().get(smsRedisKey);
         if (redisVal == null) {
             ExceptionUtil.throwException(ErrorEnum.SMS_CODE_EXPIRED);
