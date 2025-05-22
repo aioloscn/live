@@ -24,6 +24,10 @@ public class LoginMsgHandler implements SimpleHandler {
     
     @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
+        if (ImContextUtil.getUserId(ctx) != null) {
+            return;
+        }
+        
         byte[] body = msg.getBody();
         if (body == null || body.length == 0) {
             ctx.close();
@@ -44,6 +48,7 @@ public class LoginMsgHandler implements SimpleHandler {
             // 保存用户id相关的channel对象信息
             ChannelHandlerContextCache.put(userId, ctx);
             ImContextUtil.setUserId(ctx, userId);
+            ImContextUtil.setAppId(ctx, appId);
             
             ImMsgBody respBody = new ImMsgBody();
             respBody.setAppId(AppIdEnum.LIVE_APP_ID.getCode());

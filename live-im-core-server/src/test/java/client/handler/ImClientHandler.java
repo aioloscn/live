@@ -20,6 +20,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class ImClientHandler implements InitializingBean {
     
@@ -41,19 +44,37 @@ public class ImClientHandler implements InitializingBean {
                     socketChannel.pipeline().addLast(new ClientHandler());
                 }
             });
-            ChannelFuture channelFuture = null;
-            try {
-                channelFuture = bootstrap.connect("127.0.0.1", 9990).sync();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            Channel channel = channelFuture.channel();
+
+            Map<Long, Channel> userChannelMap = new HashMap<>();
             for (int i = 0; i < 10; i++) {
+                ChannelFuture channelFuture = null;
+                try {
+                    channelFuture = bootstrap.connect("127.0.0.1", 9990).sync();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Channel channel = channelFuture.channel();
+                
                 ImMsgBody  body = new ImMsgBody();
                 body.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
-                body.setUserId(111111L);
+                body.setUserId(200000L);
                 body.setToken(imTokenRpc.createImLoginToken(body.getUserId(), body.getAppId()));
                 channel.writeAndFlush(ImMsg.build(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(body)));
+                userChannelMap.put(body.getUserId(), channel);
+            }
+
+            while (true) {
+                for (Long userId : userChannelMap.keySet()) {
+                    ImMsgBody body = new ImMsgBody();
+                    body.setUserId(userId);
+                    body.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
+                    userChannelMap.get(userId).writeAndFlush(ImMsg.build(ImMsgCodeEnum.IM_HEARTBEAT_MSG.getCode(), JSON.toJSONString(body)));
+                }
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }).start();
     }

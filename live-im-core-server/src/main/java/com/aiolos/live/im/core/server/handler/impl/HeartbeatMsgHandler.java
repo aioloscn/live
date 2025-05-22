@@ -38,7 +38,7 @@ public class HeartbeatMsgHandler implements SimpleHandler {
         // redis存储心跳记录
         String heartbeatZSetKey = imCoreServerRedisKeyBuilder.buildImOnlineZSetKey(userId, appId);
         this.recordOnlineTime(userId, heartbeatZSetKey);
-        this.removeExpiredRecords(userId, heartbeatZSetKey);
+        this.removeExpiredRecords(heartbeatZSetKey);
         // 该客户端5分钟内没有发送心跳包则清空所有心跳记录表示断开
         redisTemplate.expire(heartbeatZSetKey, 5, TimeUnit.MINUTES);
 
@@ -55,10 +55,9 @@ public class HeartbeatMsgHandler implements SimpleHandler {
 
     /**
      * 清理过期的心跳记录，30s发送一次，删除60s前的记录
-     * @param userId
      * @param heartbeatZSetKey
      */
-    private void removeExpiredRecords(Long userId, String heartbeatZSetKey) {
+    private void removeExpiredRecords(String heartbeatZSetKey) {
         redisTemplate.opsForZSet().removeRangeByScore(heartbeatZSetKey, 0, System.currentTimeMillis() - ImConstants.DEFAULT_HEARTBEAT_GAP * 1000 * 2);
     }
 }
