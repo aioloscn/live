@@ -1,6 +1,7 @@
 package com.aiolos.live.im.core.server.handler.impl;
 
 import com.aiolos.live.common.keys.builder.ImCoreServerRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
 import com.aiolos.live.im.core.server.handler.SimpleHandler;
@@ -12,6 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -24,6 +26,10 @@ public class HeartbeatMsgHandler implements SimpleHandler {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private ImCoreServerRedisKeyBuilder imCoreServerRedisKeyBuilder;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder;
     
     @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
@@ -41,6 +47,8 @@ public class HeartbeatMsgHandler implements SimpleHandler {
         this.removeExpiredRecords(heartbeatZSetKey);
         // 该客户端5分钟内没有发送心跳包则清空所有心跳记录表示断开
         redisTemplate.expire(heartbeatZSetKey, 5, TimeUnit.MINUTES);
+        // 延长用户绑定的所在服务器ip的缓存有效期
+        stringRedisTemplate.expire(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId), ImConstants.DEFAULT_HEARTBEAT_GAP * 2, TimeUnit.SECONDS);
 
         ImMsgBody respBody  = new ImMsgBody();
         respBody.setUserId(userId);
@@ -50,6 +58,7 @@ public class HeartbeatMsgHandler implements SimpleHandler {
     }
 
     private void recordOnlineTime(Long userId, String heartbeatZSetKey) {
+        // 新增或更新
         redisTemplate.opsForZSet().add(heartbeatZSetKey, userId, System.currentTimeMillis());
     }
 

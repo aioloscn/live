@@ -14,6 +14,10 @@ public class ImContextUtil {
     public static Long getUserId(ChannelHandlerContext ctx) {
         return ctx.channel().attr(ImContextAttr.USER_ID).get();
     }
+
+    public static void removeUserId(ChannelHandlerContext ctx) {
+        ctx.channel().attr(ImContextAttr.USER_ID).remove();
+    }
     
     public static void setAppId(ChannelHandlerContext ctx, Integer appId) {
         ctx.channel().attr(ImContextAttr.APP_ID).set(appId);
@@ -21,5 +25,9 @@ public class ImContextUtil {
     
     public static Integer getAppId(ChannelHandlerContext ctx) {
         return ctx.channel().attr(ImContextAttr.APP_ID).get();
+    }
+    
+    public static void removeAppId(ChannelHandlerContext ctx) {
+        ctx.channel().attr(ImContextAttr.APP_ID).remove();
     }
 }

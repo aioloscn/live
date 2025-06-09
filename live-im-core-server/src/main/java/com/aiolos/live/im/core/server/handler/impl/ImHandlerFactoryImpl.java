@@ -40,5 +40,7 @@ public class ImHandlerFactoryImpl implements ImHandlerFactory, InitializingBean 
         handlerMap.put(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), applicationContext.getBean(BizMsgHandler.class));
         // 心跳消息包，定时给im发送，汇报功能
         handlerMap.put(ImMsgCodeEnum.IM_HEARTBEAT_MSG.getCode(), applicationContext.getBean(HeartbeatMsgHandler.class)); 
+        // ack消息包，确认收到消息
+        handlerMap.put(ImMsgCodeEnum.IM_ACK_MSG.getCode(), applicationContext.getBean(AckMsgHandler.class));
     }
 }

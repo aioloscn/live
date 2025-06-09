@@ -27,6 +27,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-dubbo-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-im-core-server-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
@@ -40,6 +44,10 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
         </dependency>
     </dependencies>
 </project>

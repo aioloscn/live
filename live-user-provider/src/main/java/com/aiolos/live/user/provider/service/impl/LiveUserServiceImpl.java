@@ -3,8 +3,8 @@ package com.aiolos.live.user.provider.service.impl;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
-import com.aiolos.live.common.keys.builder.MsgProviderRedisKeyBuilder;
 import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.common.MsgProviderCommonRedisKeyBuilder;
 import com.aiolos.live.id.generator.enums.IdPolicyEnum;
 import com.aiolos.live.id.generator.interfaces.IdGeneratorRpc;
 import com.aiolos.live.model.po.User;
@@ -47,7 +47,7 @@ public class LiveUserServiceImpl implements LiveUserService {
     @Resource
     private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
     @Resource
-    private MsgProviderRedisKeyBuilder msgProviderRedisKeyBuilder;
+    private MsgProviderCommonRedisKeyBuilder msgProviderCommonRedisKeyBuilder;
     @Autowired
     private UpdateUserInfoProducer updateUserInfoProducer;
     @DubboReference
@@ -79,7 +79,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             ExceptionUtil.throwException(ErrorEnum.BIND_EXCEPTION_ERROR);
         }
 
-        String smsRedisKey = msgProviderRedisKeyBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
+        String smsRedisKey = msgProviderCommonRedisKeyBuilder.buildSmsLoginCodeKey(loginBO.getPhone());
         Object redisVal = redisTemplate.opsForValue().get(smsRedisKey);
         if (redisVal == null) {
             ExceptionUtil.throwException(ErrorEnum.SMS_CODE_EXPIRED);

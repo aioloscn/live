@@ -23,8 +23,11 @@
     <module>live-msg-provider</module>
     <module>live-dubbo-common</module>
     <module>live-im-interface</module>
-    <module>live-im-core-server</module>
     <module>live-im-provider</module>
+    <module>live-im-core-server</module>
+    <module>live-im-core-server-interface</module>
+    <module>live-im-router-interface</module>
+    <module>live-im-router-provider</module>
   </modules>
 
   <properties>
@@ -47,8 +50,11 @@
     <live-msg-interface.version>1.0-SNAPSHOT</live-msg-interface.version>
     <live-msg-provider.version>1.0-SNAPSHOT</live-msg-provider.version>
     <live-im-interface.version>1.0-SNAPSHOT</live-im-interface.version>
-    <live-im-core-server.version>1.0-SNAPSHOT</live-im-core-server.version>
     <live-im-provider.version>1.0-SNAPSHOT</live-im-provider.version>
+    <live-im-core-server.version>1.0-SNAPSHOT</live-im-core-server.version>
+    <live-im-core-server-interface.version>1.0-SNAPSHOT</live-im-core-server-interface.version>
+    <live-im-router-interface.version>1.0-SNAPSHOT</live-im-router-interface.version>
+    <live-im-router-provider.version>1.0-SNAPSHOT</live-im-router-provider.version>
   </properties>
 
   <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
@@ -112,13 +118,13 @@
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>
-        <artifactId>live-im-core-server</artifactId>
-        <version>${live-im-core-server.version}</version>
+        <artifactId>live-im-core-server-interface</artifactId>
+        <version>${live-im-core-server-interface.version}</version>
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>
-        <artifactId>live-im-provider</artifactId>
-        <version>${live-im-provider.version}</version>
+        <artifactId>live-im-router-interface</artifactId>
+        <version>${live-im-router-interface.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

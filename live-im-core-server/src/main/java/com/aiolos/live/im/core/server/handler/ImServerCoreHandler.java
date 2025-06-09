@@ -1,5 +1,6 @@
 package com.aiolos.live.im.core.server.handler;
 
+import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
@@ -7,6 +8,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +20,10 @@ public class ImServerCoreHandler extends SimpleChannelInboundHandler {
 
     @Resource
     private ImHandlerFactory imHandlerFactory;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object o) throws Exception {
@@ -35,8 +41,10 @@ public class ImServerCoreHandler extends SimpleChannelInboundHandler {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Long userId = ImContextUtil.getUserId(ctx);
-        if (userId != null) {
+        Integer appId = ImContextUtil.getAppId(ctx);
+        if (userId != null && appId != null) {
             ChannelHandlerContextCache.remove(userId);
+            stringRedisTemplate.delete(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId));
         }
     }
 }

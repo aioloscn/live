@@ -21,7 +21,7 @@ public class ImMsg implements Serializable {
     // 消息体的长度
     private int len;
     
-    // 消息体
+    // 消息体 ImMsgBody
     private byte[] body;
 
     public static ImMsg build(int code, String data) {

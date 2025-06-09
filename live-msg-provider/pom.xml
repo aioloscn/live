@@ -12,14 +12,6 @@
     <dependencies>
         <dependency>
             <groupId>com.aiolos</groupId>
-            <artifactId>common-exception</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.aiolos</groupId>
-            <artifactId>common-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.aiolos</groupId>
             <artifactId>common-web</artifactId>
         </dependency>
         <dependency>
@@ -46,11 +38,15 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-msg-interface</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-im-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-im-router-interface</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
@@ -64,6 +60,10 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
         </dependency>
     </dependencies>
 

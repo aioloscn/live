@@ -1,5 +1,6 @@
 package com.aiolos.live.im.core.server.handler.impl;
 
+import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
@@ -8,12 +9,20 @@ import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class LogoutMsgHandler implements SimpleHandler {
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder;
+    
     @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
         Long userId = ImContextUtil.getUserId(ctx);
@@ -33,6 +42,9 @@ public class LogoutMsgHandler implements SimpleHandler {
 
         // 理想情况下，客户端断线时会发送一个断线消息包
         ChannelHandlerContextCache.remove(userId);
+        stringRedisTemplate.delete(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId));
+        ImContextUtil.removeUserId(ctx);
+        ImContextUtil.removeAppId(ctx);
         ctx.close();
     }
 }

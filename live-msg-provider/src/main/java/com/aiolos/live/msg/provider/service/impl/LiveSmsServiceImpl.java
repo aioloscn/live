@@ -4,6 +4,7 @@ import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.common.keys.builder.MsgProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.common.MsgProviderCommonRedisKeyBuilder;
 import com.aiolos.live.enums.MsgSendResultEnum;
 import com.aiolos.live.model.po.SmsRecord;
 import com.aiolos.live.msg.provider.config.MsgThreadPoolManager;
@@ -29,6 +30,8 @@ public class LiveSmsServiceImpl implements LiveSmsService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private MsgProviderRedisKeyBuilder msgProviderRedisKeyBuilder;
+    @Resource
+    private MsgProviderCommonRedisKeyBuilder msgProviderCommonRedisKeyBuilder;
     
     @Transactional
     @Override
@@ -43,7 +46,7 @@ public class LiveSmsServiceImpl implements LiveSmsService {
 
         // 生成6位验证码，有效期5分钟，1分钟内不能重复发送，存储到redis
         int code = RandomUtils.secure().randomInt(100000, 999999);
-        String smsRedisKey = msgProviderRedisKeyBuilder.buildSmsLoginCodeKey(phone);
+        String smsRedisKey = msgProviderCommonRedisKeyBuilder.buildSmsLoginCodeKey(phone);
         redisTemplate.opsForValue().set(smsRedisKey, code, 300, TimeUnit.SECONDS);
         
         // 发送短信
