@@ -28,6 +28,8 @@
     <module>live-im-core-server-interface</module>
     <module>live-im-router-interface</module>
     <module>live-im-router-provider</module>
+    <module>live-living-interface</module>
+    <module>live-living-provider</module>
   </modules>
 
   <properties>
@@ -55,6 +57,8 @@
     <live-im-core-server-interface.version>1.0-SNAPSHOT</live-im-core-server-interface.version>
     <live-im-router-interface.version>1.0-SNAPSHOT</live-im-router-interface.version>
     <live-im-router-provider.version>1.0-SNAPSHOT</live-im-router-provider.version>
+    <live-living-interface.version>1.0-SNAPSHOT</live-living-interface.version>
+    <live-living-provider.version>1.0-SNAPSHOT</live-living-provider.version>
   </properties>
 
   <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
@@ -125,6 +129,11 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-im-router-interface</artifactId>
         <version>${live-im-router-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-living-interface</artifactId>
+        <version>${live-living-interface.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

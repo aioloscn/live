@@ -26,7 +26,7 @@ public class UserRpcImpl implements UserRpc {
     }
 
     @Override
-    public Long getUserIdByToken(String token) {
+    public UserDTO getUserIdByToken(String token) {
         return liveUserService.getUserIdByToken(token);
     }
 

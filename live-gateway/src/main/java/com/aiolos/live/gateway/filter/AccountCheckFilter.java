@@ -3,6 +3,7 @@ package com.aiolos.live.gateway.filter;
 import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.common.enums.GatewayHeaderEnum;
 import com.aiolos.live.common.keys.GatewayApplicationProperties;
+import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.interfaces.UserRpc;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,9 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         List<String> whitelistUrls = gatewayApplicationProperties.getUrls();
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
+        if (path.contains("api-docs")) {
+            return chain.filter(exchange);
+        }
         if (StringUtils.isBlank(path) || CollectionUtil.isEmpty(whitelistUrls))
             return Mono.empty();
 
@@ -49,12 +53,12 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         if (StringUtils.isBlank(token))
             return Mono.empty();
         // 根据token获取userId
-        Long userId = userRpc.getUserIdByToken(token);
-        if (userId == null)
+        UserDTO userDTO = userRpc.getUserIdByToken(token);
+        if (userDTO == null || userDTO.getUserId() == null)
             return Mono.empty();
         // 将userId放入请求头，下游服务可以从请求头中获取
         ServerHttpRequest.Builder builder = request.mutate();
-        builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), String.valueOf(userId));
+        builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), String.valueOf(userDTO.getUserId()));
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
 

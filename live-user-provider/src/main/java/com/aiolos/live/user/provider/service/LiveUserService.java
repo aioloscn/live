@@ -12,7 +12,7 @@ public interface LiveUserService {
 
     String createToken(Long userId);
 
-    Long getUserIdByToken(String token);
+    UserDTO getUserIdByToken(String token);
 
     UserVO login(LoginBO loginBO, HttpServletResponse response);
 

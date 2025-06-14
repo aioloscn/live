@@ -1,5 +1,6 @@
 package com.aiolos.live.user.provider.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
@@ -61,15 +62,25 @@ public class LiveUserServiceImpl implements LiveUserService {
     }
 
     @Override
-    public Long getUserIdByToken(String token) {
+    public UserDTO getUserIdByToken(String token) {
+        UserDTO dto = new UserDTO();
+        Long userId = null;
         Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTokenKey(token));
         if (obj instanceof Integer) {
-            return ((Integer) obj).longValue();
+            userId = ((Integer) obj).longValue();
         } else if (obj instanceof Long) {
-            return (Long) obj;
+            userId = (Long) obj;
         } else {
-            return null;
+            return dto;
         }
+        dto.setUserId(userId);
+        Object userObj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
+        if (userObj != null) {
+            UserVO userVO = ConvertBeanUtil.convert(userObj, UserVO::new);
+            BeanUtil.copyProperties(userVO, dto);
+        }
+        
+        return dto;
     }
 
     @Override

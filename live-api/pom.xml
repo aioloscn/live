@@ -31,6 +31,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-msg-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-living-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
