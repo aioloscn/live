@@ -3,6 +3,7 @@ package com.aiolos.live.living.provider.service.impl;
 import com.aiolos.common.enums.base.BoolEnum;
 import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.common.utils.PageConvertUtil;
+import com.aiolos.live.common.wrapper.Page;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
 import com.aiolos.live.living.dto.LivingRoomListDTO;
@@ -14,7 +15,6 @@ import com.aiolos.live.model.po.LivingRoomRecord;
 import com.aiolos.live.service.LivingRoomRecordService;
 import com.aiolos.live.service.LivingRoomService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +28,11 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
     private LivingRoomRecordService livingRoomRecordService;
     
     @Override
-    public boolean startStreaming(StreamingDTO dto) {
+    public Long startStreaming(StreamingDTO dto) {
         LivingRoom livingRoom = ConvertBeanUtil.convert(dto, LivingRoom::new);
         livingRoom.setStatus(BoolEnum.YES.getValue());
-        return livingRoomService.save(livingRoom);
+        livingRoomService.save(livingRoom);
+        return livingRoom.getId();
     }
 
     @Override
@@ -51,8 +52,8 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
     @Override
     public PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model) {
         LambdaQueryWrapper<LivingRoom> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(LivingRoom::getStatus, BoolEnum.YES.getValue());
-        IPage<LivingRoom> page = livingRoomService.page(model.getPage(LivingRoom.class), queryWrapper);
+        queryWrapper.eq(LivingRoom::getStatus, BoolEnum.YES.getValue()).eq(LivingRoom::getType, model.getData().getType());
+        Page<LivingRoom> page = livingRoomService.page(model.getPage(LivingRoom.class), queryWrapper);
         return PageConvertUtil.convert(page, LivingRoomVO.class);
     }
 }

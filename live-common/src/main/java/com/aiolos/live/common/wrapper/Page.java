@@ -63,6 +63,10 @@ public class Page<T> implements IPage<T>, Serializable {
         return this.current > 1L;
     }
 
+    public boolean hasNext() {
+        return this.current < this.getPages();
+    }
+
     public List<T> getRecords() {
         return this.records;
     }

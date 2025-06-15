@@ -17,6 +17,9 @@ public class LivingRoomListVO implements Serializable {
     @Schema(description = "状态, 0: 无效, 1: 有效")
     private Boolean status;
 
+    @Schema(description = "直播间类型, 1: 常规直播间, 2: PK房")
+    private Integer type;
+
     @Schema(description = "直播间名称")
     private String roomName;
 

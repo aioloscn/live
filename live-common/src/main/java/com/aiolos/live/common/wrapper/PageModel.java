@@ -19,6 +19,9 @@ public class PageModel<T> implements Serializable {
     }
 
     public void setCurrent(long current) {
+        if (page == null) {
+            page = new Page<>();
+        }
         page.setCurrent(current);
     }
     
@@ -27,6 +30,9 @@ public class PageModel<T> implements Serializable {
     }
     
     public void setSize(long size) {
+        if (page == null) {
+            page = new Page<>();
+        }
         page.setSize(size);
     }
     

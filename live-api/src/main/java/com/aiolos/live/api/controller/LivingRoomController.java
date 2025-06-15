@@ -5,6 +5,7 @@ import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.service.HomeLivingRoomService;
 import com.aiolos.live.api.vo.LivingRoomListVO;
+import com.aiolos.live.api.vo.LivingRoomVO;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
 import com.aiolos.live.enums.LivingRoomExceptionEnum;
@@ -24,13 +25,17 @@ public class LivingRoomController {
     private HomeLivingRoomService  homeLivingRoomService;
     
     @PostMapping("/start-streaming")
-    public void startStreaming(Integer type) {
+    public LivingRoomVO startStreaming(Integer type) {
         if (type == null) {
             ExceptionUtil.throwException(LivingRoomExceptionEnum.START_STREAMING_TYPE_ERROR);
         }
-        if (!homeLivingRoomService.startStreaming(type)) {
+        Long roomId = homeLivingRoomService.startStreaming(type);
+        if (roomId == null) {
             ExceptionUtil.throwException(LivingRoomExceptionEnum.START_STREAMING_ERROR);
         }
+        LivingRoomVO vo = new LivingRoomVO();
+        vo.setRoomId(roomId);
+        return vo;
     }
     
     @PostMapping("/stop-streaming")

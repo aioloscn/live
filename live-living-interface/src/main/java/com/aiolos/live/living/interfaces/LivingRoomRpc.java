@@ -8,7 +8,7 @@ import com.aiolos.live.living.vo.LivingRoomVO;
 
 public interface LivingRoomRpc {
 
-    boolean startStreaming(StreamingDTO dto);
+    Long startStreaming(StreamingDTO dto);
 
     void stopStreaming(StreamingDTO dto);
     

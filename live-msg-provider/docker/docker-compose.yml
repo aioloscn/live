@@ -10,6 +10,7 @@ services:
       - DUBBO_PORT_TO_BIND=20882            # 容器内 Dubbo 服务绑定的端口（会覆盖 dubbo.protocol.port）
       - NACOS_HOST=${DEV_HOST}
       - MYSQL_HOST=${DEV_HOST}
+      - ROCKETMQ_HOST=${DEV_HOST}
       - REDIS_HOST=${DEV_HOST}
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
     ports:

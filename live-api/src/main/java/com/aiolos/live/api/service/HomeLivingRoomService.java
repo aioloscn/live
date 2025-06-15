@@ -11,7 +11,7 @@ public interface HomeLivingRoomService {
      * 开播
      * @param type 直播类型
      */
-    boolean startStreaming(Integer type);
+    Long startStreaming(Integer type);
 
     /**
      * 关播

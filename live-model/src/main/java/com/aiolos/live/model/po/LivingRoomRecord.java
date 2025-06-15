@@ -40,6 +40,12 @@ public class LivingRoomRecord implements Serializable {
     private Boolean status;
 
     /**
+     * 直播间类型, 1: 常规直播间, 2: PK房
+     */
+    @TableField("type")
+    private Integer type;
+
+    /**
      * 直播间名称
      */
     @TableField("room_name")

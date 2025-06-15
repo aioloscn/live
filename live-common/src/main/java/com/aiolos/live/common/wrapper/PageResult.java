@@ -12,4 +12,6 @@ public class PageResult<T> implements Serializable {
     private long size;
     private long current;
     private List<T> records;
+    private boolean hasPrevious;
+    private boolean hasNext;
 }

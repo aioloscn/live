@@ -13,7 +13,7 @@ public interface LiveLivingRoomService {
      * @param dto
      * @return
      */
-    boolean startStreaming(StreamingDTO dto);
+    Long startStreaming(StreamingDTO dto);
 
     /**
      * 关播

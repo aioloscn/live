@@ -17,7 +17,7 @@ public class LivingRoomRpcImpl implements LivingRoomRpc {
     private LiveLivingRoomService liveLivingRoomService;
     
     @Override
-    public boolean startStreaming(StreamingDTO dto) {
+    public Long startStreaming(StreamingDTO dto) {
         return liveLivingRoomService.startStreaming(dto);
     }
 

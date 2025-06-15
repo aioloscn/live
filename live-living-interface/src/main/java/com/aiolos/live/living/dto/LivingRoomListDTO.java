@@ -7,5 +7,5 @@ import java.io.Serializable;
 @Data
 public class LivingRoomListDTO implements Serializable {
     
-    private Integer type;
+    private Integer type = 1;
 }

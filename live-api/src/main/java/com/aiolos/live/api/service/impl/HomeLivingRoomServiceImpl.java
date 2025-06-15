@@ -22,7 +22,7 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
     private LivingRoomRpc livingRoomRpc;
     
     @Override
-    public boolean startStreaming(Integer type) {
+    public Long startStreaming(Integer type) {
         StreamingDTO dto = new StreamingDTO();
         dto.setStreamerId(ContextInfo.getUserId());
         dto.setRoomName("测试直播间");

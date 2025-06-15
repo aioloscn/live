@@ -1,19 +1,21 @@
 package com.aiolos.live.common.utils;
 
+import com.aiolos.live.common.wrapper.Page;
 import com.aiolos.live.common.wrapper.PageResult;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.BeanUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PageConvertUtil<T> {
 
-    public static <T, R> PageResult<R> convert(IPage<T> page, Class<R> targetClass) {
+    public static <T, R> PageResult<R> convert(Page<T> page, Class<R> targetClass) {
         PageResult<R> result = new PageResult<>();
         result.setTotal(page.getTotal());
         result.setSize(page.getSize());
         result.setCurrent(page.getCurrent());
         result.setRecords(convertRecords(page.getRecords(), targetClass));
+        result.setHasPrevious(page.hasPrevious());
+        result.setHasNext(page.hasNext());
         return result;
     }
 
@@ -33,12 +35,14 @@ public class PageConvertUtil<T> {
         }
     }
     
-    public static <T> PageResult<T> convert(IPage<T> page) {
+    public static <T> PageResult<T> convert(Page<T> page) {
         PageResult<T> result = new PageResult<>();
         result.setTotal(page.getTotal());
         result.setSize(page.getSize());
         result.setCurrent(page.getCurrent());
         result.setRecords(page.getRecords());
+        result.setHasPrevious(page.hasPrevious());
+        result.setHasNext(page.hasNext());
         return result;
     }
 
@@ -48,6 +52,8 @@ public class PageConvertUtil<T> {
         target.setSize(source.getSize());
         target.setCurrent(source.getCurrent());
         target.setRecords(convertRecords(source.getRecords(), targetClass));
+        target.setHasPrevious(source.isHasPrevious());
+        target.setHasNext(source.isHasNext());
         return target;
     }
 }
