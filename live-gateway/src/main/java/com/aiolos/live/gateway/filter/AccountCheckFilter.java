@@ -5,6 +5,7 @@ import com.aiolos.common.enums.GatewayHeaderEnum;
 import com.aiolos.live.common.keys.GatewayApplicationProperties;
 import com.aiolos.live.user.dto.UserDTO;
 import com.aiolos.live.user.interfaces.UserRpc;
+import com.alibaba.fastjson2.JSON;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -59,6 +60,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         // 将userId放入请求头，下游服务可以从请求头中获取
         ServerHttpRequest.Builder builder = request.mutate();
         builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), String.valueOf(userDTO.getUserId()));
+        builder.header(GatewayHeaderEnum.USER_INFO_JSON.getHeaderName(), JSON.toJSONString(userDTO));
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
 
