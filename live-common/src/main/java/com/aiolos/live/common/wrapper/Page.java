@@ -27,14 +27,6 @@ public class Page<T> implements IPage<T>, Serializable {
     protected String countId;
 
     public Page() {
-        this.records = Collections.emptyList();
-        this.total = 0L;
-        this.size = 10L;
-        this.current = 1L;
-        this.orders = new ArrayList<>();
-        this.optimizeCountSql = true;
-        this.searchCount = true;
-        this.optimizeJoinOfCountSql = true;
     }
 
     public Page(long current, long size) {
@@ -69,10 +61,6 @@ public class Page<T> implements IPage<T>, Serializable {
 
     public boolean hasPrevious() {
         return this.current > 1L;
-    }
-
-    public boolean hasNext() {
-        return this.current < this.getPages();
     }
 
     public List<T> getRecords() {
