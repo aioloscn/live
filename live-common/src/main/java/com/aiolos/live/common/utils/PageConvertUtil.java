@@ -6,7 +6,7 @@ import org.springframework.beans.BeanUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PageConvertUtil<T> {
+public class PageConvertUtil {
 
     public static <T, R> PageResult<R> convert(Page<T> page, Class<R> targetClass) {
         PageResult<R> result = new PageResult<>();
@@ -52,8 +52,8 @@ public class PageConvertUtil<T> {
         target.setSize(source.getSize());
         target.setCurrent(source.getCurrent());
         target.setRecords(convertRecords(source.getRecords(), targetClass));
-        target.setHasPrevious(source.isHasPrevious());
-        target.setHasNext(source.isHasNext());
+        target.setHasPrevious(source.getHasPrevious());
+        target.setHasNext(source.getHasNext());
         return target;
     }
 }

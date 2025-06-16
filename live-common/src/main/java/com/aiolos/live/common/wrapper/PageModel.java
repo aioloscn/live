@@ -37,7 +37,11 @@ public class PageModel<T> implements Serializable {
     }
     
     public <R> Page<R> getPage(Class<R> clazz) {
-        return (Page<R>) page;
+        Page<R> p = (Page<R>) page;
+        p.setOptimizeCountSql(true);
+        p.setSearchCount(true);
+        p.setOptimizeJoinOfCountSql(true);
+        return p;
     }
     
     public void setPage(Page<?> page) {
