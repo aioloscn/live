@@ -8,7 +8,7 @@ import com.aiolos.live.api.vo.LivingRoomListVO;
 import com.aiolos.live.api.vo.LivingRoomVO;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
-import com.aiolos.live.enums.LivingRoomExceptionEnum;
+import com.aiolos.live.enums.exceptions.LivingRoomExceptionEnum;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

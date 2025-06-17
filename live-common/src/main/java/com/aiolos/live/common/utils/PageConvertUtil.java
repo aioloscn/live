@@ -3,6 +3,8 @@ package com.aiolos.live.common.utils;
 import com.aiolos.live.common.wrapper.Page;
 import com.aiolos.live.common.wrapper.PageResult;
 import org.springframework.beans.BeanUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,9 @@ public class PageConvertUtil {
     }
 
     private static <T, R> List<R> convertRecords(List<T> records, Class<R> targetClass) {
+        if (records == null) {
+            return new ArrayList<>();
+        }
         return records.stream()
                 .map(record -> convertRecord(record, targetClass))
                 .collect(Collectors.toList());

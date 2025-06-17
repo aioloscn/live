@@ -76,7 +76,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         dto.setUserId(userId);
         Object userObj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
         if (userObj != null) {
-            UserVO userVO = ConvertBeanUtil.convert(userObj, UserVO::new);
+            UserVO userVO = ConvertBeanUtil.convert(userObj, UserVO.class);
             BeanUtil.copyProperties(userVO, dto);
         }
         
@@ -110,7 +110,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             newUser.setUserId(idGeneratorRpc.getNonSeqId(IdPolicyEnum.USER_ID_POLICY.getPrimaryKey()));
             newUser.setNickName("用户_" + RandomUtils.secure().randomInt(10000000, 99999999));
             newUser.setPhone(loginBO.getPhone());
-            userVO = ConvertBeanUtil.convert(newUser, UserVO::new);
+            userVO = ConvertBeanUtil.convert(newUser, UserVO.class);
             // 得保证主线程不会有异常
             UserThreadPoolManager.commonAsyncPool.execute(() -> userService.save(newUser));
         }
@@ -139,10 +139,10 @@ public class LiveUserServiceImpl implements LiveUserService {
         String userKey = userProviderRedisKeyBuilder.buildUserInfoKey(userId);
         Object obj = redisTemplate.opsForValue().get(userKey);
         if (obj != null) {
-            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO::new);
+            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO.class);
             return userVO.getUserId() != null ? userVO : null;
         }
-        UserVO userVO = ConvertBeanUtil.convert(userService.getById(userId), UserVO::new);
+        UserVO userVO = ConvertBeanUtil.convert(userService.getById(userId), UserVO.class);
         if (userVO != null) {
             redisTemplate.opsForValue().set(userKey, userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
         } else {
@@ -157,7 +157,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         if (userDTO == null || userDTO.getUserId() == null) {
             return;
         }
-        userService.save(ConvertBeanUtil.convert(userDTO, User::new));
+        userService.save(ConvertBeanUtil.convert(userDTO, User.class));
     }
 
     @Override
@@ -166,7 +166,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             return;
         }
         // 目前情况分库分表
-        boolean updated = userService.updateById(ConvertBeanUtil.convert(userDTO, User::new));
+        boolean updated = userService.updateById(ConvertBeanUtil.convert(userDTO, User.class));
         if (updated) {
             redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(userDTO.getUserId()));
             updateUserInfoProducer.deleteUserCache(userDTO.getUserId());
@@ -185,7 +185,7 @@ public class LiveUserServiceImpl implements LiveUserService {
 
         List<String> keyList = userIds.stream().map(userId -> userProviderRedisKeyBuilder.buildUserInfoKey(userId)).collect(Collectors.toList());
         List<UserVO> dtoListInRedis = redisTemplate.opsForValue().multiGet(keyList).stream()
-                .filter(Objects::nonNull).map(x -> ConvertBeanUtil.convert(x, UserVO::new)).collect(Collectors.toList());
+                .filter(Objects::nonNull).map(x -> ConvertBeanUtil.convert(x, UserVO.class)).collect(Collectors.toList());
 
         if (!CollectionUtils.isEmpty(dtoListInRedis) && dtoListInRedis.size() == userIds.size()) {
             return dtoListInRedis.stream().collect(Collectors.toMap(UserVO::getUserId, Function.identity()));
@@ -201,7 +201,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         try {
             dbQueryResult = forkJoinPool.submit(() ->
                     userIdMap.values().parallelStream()
-                            .flatMap(ids -> ConvertBeanUtil.convertList(userService.listByIds(ids), UserVO::new).stream())
+                            .flatMap(ids -> ConvertBeanUtil.convertList(userService.listByIds(ids), UserVO.class).stream())
                             .collect(Collectors.toList())
             ).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -234,7 +234,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         Object obj = redisTemplate.opsForValue().get(key);
         if (obj != null) {
             // 可能是空缓存
-            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO::new);
+            UserVO userVO = ConvertBeanUtil.convert(obj, UserVO.class);
             if (userVO.getUserId() == null) {
                 return null;
             }
@@ -243,7 +243,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         
         User user = userService.lambdaQuery().eq(User::getPhone, phone).one();
         if (user != null) {
-            UserVO userVO = ConvertBeanUtil.convert(user, UserVO::new);
+            UserVO userVO = ConvertBeanUtil.convert(user, UserVO.class);
             redisTemplate.opsForValue().set(key, userVO, 30, TimeUnit.MINUTES);
             return userVO;
         }

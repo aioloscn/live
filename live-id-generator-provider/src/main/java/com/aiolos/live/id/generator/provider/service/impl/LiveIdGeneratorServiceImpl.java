@@ -3,7 +3,7 @@ package com.aiolos.live.id.generator.provider.service.impl;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.json.JSONUtil;
 import com.aiolos.common.exception.utils.ExceptionUtil;
-import com.aiolos.live.enums.ServiceExceptionEnum;
+import com.aiolos.live.enums.exceptions.ServiceExceptionEnum;
 import com.aiolos.live.id.generator.provider.bo.LocalNonSeqIdBO;
 import com.aiolos.live.id.generator.provider.bo.LocalSeqIdBO;
 import com.aiolos.live.id.generator.provider.service.LiveIdGeneratorService;

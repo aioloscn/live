@@ -32,7 +32,7 @@ public class UserRpcImpl implements UserRpc {
 
     @Override
     public UserDTO getUserById(Long userId) {
-        return ConvertBeanUtil.convert(liveUserService.getUserById(userId), UserDTO::new);
+        return ConvertBeanUtil.convert(liveUserService.getUserById(userId), UserDTO.class);
     }
 
     @Override
@@ -51,6 +51,6 @@ public class UserRpcImpl implements UserRpc {
         if (CollectionUtil.isEmpty(userVOMap)) {
             return Maps.newHashMap();
         }
-        return userVOMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> ConvertBeanUtil.convert(entry.getValue(), UserDTO::new)));
+        return userVOMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> ConvertBeanUtil.convert(entry.getValue(), UserDTO.class)));
     }
 }

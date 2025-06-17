@@ -53,4 +53,10 @@ public class CommonRedisAutoConfiguration {
     public ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder(RedisKeyProperties properties) {
         return new ImCoreServerCommonRedisKeyBuilder(properties);
     }
+
+    @Bean
+    @Conditional(RedisKeyLoadMatch.class)
+    public LivingRoomRedisKeyBuilder livingRoomRedisKeyBuilder(RedisKeyProperties properties) {
+        return new LivingRoomRedisKeyBuilder(properties);
+    }
 }

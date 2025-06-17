@@ -32,6 +32,6 @@ public class ImRouterServiceImpl implements ImRouterService {
         }
         // host:port
         RpcContext.getContext().set("ip", serverIpAddress);
-        routerHandlerRpc.sendMsg(ConvertBeanUtil.convert(dto, RouterHandlerMsgDTO::new)); 
+        routerHandlerRpc.sendMsg(ConvertBeanUtil.convert(dto, RouterHandlerMsgDTO.class)); 
     }
 }

@@ -2,6 +2,7 @@ package com.aiolos.live.living.provider.service.impl;
 
 import com.aiolos.common.enums.base.BoolEnum;
 import com.aiolos.common.utils.ConvertBeanUtil;
+import com.aiolos.live.common.keys.builder.LivingRoomRedisKeyBuilder;
 import com.aiolos.live.common.utils.PageConvertUtil;
 import com.aiolos.live.common.wrapper.Page;
 import com.aiolos.live.common.wrapper.PageModel;
@@ -14,14 +15,21 @@ import com.aiolos.live.model.po.LivingRoom;
 import com.aiolos.live.model.po.LivingRoomRecord;
 import com.aiolos.live.service.LivingRoomRecordService;
 import com.aiolos.live.service.LivingRoomService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private LivingRoomRedisKeyBuilder livingRoomRedisKeyBuilder;
     @Autowired
     private LivingRoomService livingRoomService;
     @Autowired
@@ -29,9 +37,11 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
     
     @Override
     public Long startStreaming(StreamingDTO dto) {
-        LivingRoom livingRoom = ConvertBeanUtil.convert(dto, LivingRoom::new);
+        LivingRoom livingRoom = ConvertBeanUtil.convert(dto, LivingRoom.class);
         livingRoom.setStatus(BoolEnum.YES.getValue());
         livingRoomService.save(livingRoom);
+        // 防止之前有空值缓存
+        redisTemplate.delete(livingRoomRedisKeyBuilder.buildLivingRoomObjKey(livingRoom.getId()));
         return livingRoom.getId();
     }
 
@@ -42,18 +52,28 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
         if (livingRoom == null) {
             return;
         }
-        LivingRoomRecord livingRoomRecord = ConvertBeanUtil.convert(livingRoom, LivingRoomRecord::new);
+        LivingRoomRecord livingRoomRecord = ConvertBeanUtil.convert(livingRoom, LivingRoomRecord.class);
         livingRoomRecord.setId(null);
         if (livingRoomRecordService.save(livingRoomRecord)) {
             livingRoomService.removeById(dto.getRoomId());
+            redisTemplate.delete(livingRoomRedisKeyBuilder.buildLivingRoomObjKey(dto.getRoomId()));
         }
     }
 
     @Override
     public PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model) {
-        LambdaQueryWrapper<LivingRoom> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(LivingRoom::getStatus, BoolEnum.YES.getValue()).eq(LivingRoom::getType, model.getData().getType());
-        Page<LivingRoom> page = livingRoomService.page(model.getPage(LivingRoom.class), queryWrapper);
-        return PageConvertUtil.convert(page, LivingRoomVO.class);
+        String key = livingRoomRedisKeyBuilder.buildLivingRoomListKey(model.getData().getType());
+        long current = model.getCurrent();
+        long size = model.getSize();
+        Long total = redisTemplate.opsForList().size(key);
+        if (total == 0) {
+            return PageConvertUtil.convert(model.getPage(LivingRoomVO.class));
+        }
+        List<Object> resultList = redisTemplate.opsForList().range(key, (current - 1) * size, current * size - 1);
+        List<LivingRoomVO> livingRooms = ConvertBeanUtil.convertList(resultList, LivingRoomVO.class);
+        Page<LivingRoomVO> page = model.getPage(LivingRoomVO.class);
+        page.setTotal(total);
+        page.setRecords(livingRooms);
+        return PageConvertUtil.convert(page);
     }
 }

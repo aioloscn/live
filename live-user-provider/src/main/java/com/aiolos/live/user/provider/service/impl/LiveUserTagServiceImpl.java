@@ -119,7 +119,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
         UserTag userTag = null;
         Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTagKey(userId));
         if (obj != null) {
-            userTag = ConvertBeanUtil.convert(obj, UserTag::new);
+            userTag = ConvertBeanUtil.convert(obj, UserTag.class);
         } else {
             userTag = userTagService.getOne(Wrappers.lambdaQuery(UserTag.class).eq(UserTag::getUserId, userId));
             if (userTag != null) {

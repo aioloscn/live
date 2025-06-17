@@ -41,7 +41,7 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
 
     @Override
     public PageResult<LivingRoomListVO> queryLivingRoomList(PageModel<LivingRoomListBO> model) {
-        PageModel<LivingRoomListDTO> newModel = model.convert(bo -> ConvertBeanUtil.convert(bo, LivingRoomListDTO::new));
+        PageModel<LivingRoomListDTO> newModel = model.convert(bo -> ConvertBeanUtil.convert(bo, LivingRoomListDTO.class));
         PageResult<LivingRoomVO> result = livingRoomRpc.queryLivingRoomList(newModel);
         return PageConvertUtil.convert(result, LivingRoomListVO.class);
     }

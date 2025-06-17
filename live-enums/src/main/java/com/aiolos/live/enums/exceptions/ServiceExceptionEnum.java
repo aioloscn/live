@@ -1,4 +1,4 @@
-package com.aiolos.live.enums;
+package com.aiolos.live.enums.exceptions;
 
 import com.aiolos.common.enums.errors.CommonError;
 import lombok.AllArgsConstructor;
