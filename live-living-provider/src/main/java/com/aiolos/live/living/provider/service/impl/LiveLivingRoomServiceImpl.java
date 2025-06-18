@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
@@ -75,5 +76,25 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
         page.setTotal(total);
         page.setRecords(livingRooms);
         return PageConvertUtil.convert(page);
+    }
+
+    @Override
+    public LivingRoomVO queryByRoomId(Long roomId) {
+        if (roomId == null) return null;
+        String key = livingRoomRedisKeyBuilder.buildLivingRoomObjKey(roomId);
+        Object obj = redisTemplate.opsForValue().get(key);
+        if (obj != null) {
+            LivingRoomVO vo = ConvertBeanUtil.convert(obj, LivingRoomVO.class);
+            return vo.getId() == null ? null : vo;
+        }
+        LivingRoom livingRoom = livingRoomService.lambdaQuery().eq(LivingRoom::getId, roomId).one();
+        if (livingRoom == null) {
+            // 防止缓存击穿
+            redisTemplate.opsForValue().set(key, new LivingRoomVO(), 1, TimeUnit.MINUTES);
+            return null;
+        }
+        LivingRoomVO vo = ConvertBeanUtil.convert(livingRoom, LivingRoomVO.class);
+        redisTemplate.opsForValue().set(key, vo, 30, TimeUnit.MINUTES);
+        return vo;
     }
 }

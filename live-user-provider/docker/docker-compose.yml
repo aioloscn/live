@@ -12,7 +12,7 @@ services:
       - NACOS_HOST=${DEV_HOST}
       - REDIS_HOST=${DEV_HOST}
       - ROCKETMQ_HOST=${DEV_HOST}
-      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+      - JAVA_OPTS=-XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m -Xms512m -Xmx512m -Xmn256m -Xss256k
     ports:
       - '8781:8781'
       - '20880:20880'
@@ -21,26 +21,26 @@ services:
       - 'slave.mysql.com:${DEV_HOST}'
     volumes:
       - D:\tmp\logs\live-user-provider-1:/tmp/logs/live-user-provider
-    
-  live-user-provider-docker-2:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    image: 'live-user-provider-docker:latest'
-    environment:
-      - server.port=8782
-      - spring.cloud.nacos.discovery.ip=${DEV_HOST}
-      - DUBBO_IP_TO_REGISTRY=${DEV_HOST}
-      - DUBBO_PORT_TO_BIND=20881
-      - NACOS_HOST=${DEV_HOST}
-      - REDIS_HOST=${DEV_HOST}
-      - ROCKETMQ_HOST=${DEV_HOST}
-      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
-    ports:
-      - '8782:8782'
-      - '20881:20881'
-    extra_hosts:
-      - 'master.mysql.com:${DEV_HOST}'
-      - 'slave.mysql.com:${DEV_HOST}'
-    volumes:
-      - D:\tmp\logs\live-user-provider-2:/tmp/logs/live-user-provider
+#    
+#  live-user-provider-docker-2:
+#    build:
+#      context: ..
+#      dockerfile: docker/Dockerfile
+#    image: 'live-user-provider-docker:latest'
+#    environment:
+#      - server.port=8782
+#      - spring.cloud.nacos.discovery.ip=${DEV_HOST}
+#      - DUBBO_IP_TO_REGISTRY=${DEV_HOST}
+#      - DUBBO_PORT_TO_BIND=20881
+#      - NACOS_HOST=${DEV_HOST}
+#      - REDIS_HOST=${DEV_HOST}
+#      - ROCKETMQ_HOST=${DEV_HOST}
+#      - JAVA_OPTS=-XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m -Xms512m -Xmx512m -Xmn256m -Xss256k
+#    ports:
+#      - '8782:8782'
+#      - '20881:20881'
+#    extra_hosts:
+#      - 'master.mysql.com:${DEV_HOST}'
+#      - 'slave.mysql.com:${DEV_HOST}'
+#    volumes:
+#      - D:\tmp\logs\live-user-provider-2:/tmp/logs/live-user-provider

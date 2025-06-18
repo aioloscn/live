@@ -4,6 +4,7 @@ import com.aiolos.common.model.ContextInfo;
 import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.service.HomeLivingRoomService;
+import com.aiolos.live.api.vo.ApiLivingRoomVO;
 import com.aiolos.live.api.vo.LivingRoomListVO;
 import com.aiolos.live.common.utils.PageConvertUtil;
 import com.aiolos.live.common.wrapper.PageModel;
@@ -44,5 +45,16 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
         PageModel<LivingRoomListDTO> newModel = model.convert(bo -> ConvertBeanUtil.convert(bo, LivingRoomListDTO.class));
         PageResult<LivingRoomVO> result = livingRoomRpc.queryLivingRoomList(newModel);
         return PageConvertUtil.convert(result, LivingRoomListVO.class);
+    }
+
+    @Override
+    public ApiLivingRoomVO queryByRoomId(Long userId, Long roomId) {
+        LivingRoomVO livingRoomVO = livingRoomRpc.queryByRoomId(roomId);
+        if (livingRoomVO == null || livingRoomVO.getStreamerId() == null || !livingRoomVO.getStreamerId().equals(userId))
+            return null;
+        ApiLivingRoomVO vo = new ApiLivingRoomVO();
+        vo.setRoomId(roomId);
+        vo.setStreamerId(userId);
+        return vo;
     }
 }

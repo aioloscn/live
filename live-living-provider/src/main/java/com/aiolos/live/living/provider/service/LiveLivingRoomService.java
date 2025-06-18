@@ -27,4 +27,6 @@ public interface LiveLivingRoomService {
      * @return
      */
     PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model);
+    
+    LivingRoomVO queryByRoomId(Long roomId);
 }

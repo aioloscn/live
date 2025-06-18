@@ -2,10 +2,11 @@ package com.aiolos.live.api.controller;
 
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
+import com.aiolos.common.model.ContextInfo;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.service.HomeLivingRoomService;
 import com.aiolos.live.api.vo.LivingRoomListVO;
-import com.aiolos.live.api.vo.LivingRoomVO;
+import com.aiolos.live.api.vo.ApiLivingRoomVO;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
 import com.aiolos.live.enums.exceptions.LivingRoomExceptionEnum;
@@ -25,7 +26,7 @@ public class LivingRoomController {
     private HomeLivingRoomService  homeLivingRoomService;
     
     @PostMapping("/start-streaming")
-    public LivingRoomVO startStreaming(Integer type) {
+    public ApiLivingRoomVO startStreaming(Integer type) {
         if (type == null) {
             ExceptionUtil.throwException(LivingRoomExceptionEnum.START_STREAMING_TYPE_ERROR);
         }
@@ -33,7 +34,7 @@ public class LivingRoomController {
         if (roomId == null) {
             ExceptionUtil.throwException(LivingRoomExceptionEnum.START_STREAMING_ERROR);
         }
-        LivingRoomVO vo = new LivingRoomVO();
+        ApiLivingRoomVO vo = new ApiLivingRoomVO();
         vo.setRoomId(roomId);
         return vo;
     }
@@ -49,5 +50,14 @@ public class LivingRoomController {
     @PostMapping("/list")
     public PageResult<LivingRoomListVO> queryLivingRoomList(@RequestBody PageModel<LivingRoomListBO> model) {
         return homeLivingRoomService.queryLivingRoomList(model);
+    }
+    
+    @PostMapping("/streamer-config")
+    public ApiLivingRoomVO streamerConfig(Long roomId) {
+        Long userId = ContextInfo.getUserId();
+        if (userId == null || roomId == null) {
+            return null;
+        }
+        return homeLivingRoomService.queryByRoomId(userId, roomId);
     }
 }

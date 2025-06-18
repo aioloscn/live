@@ -77,7 +77,7 @@ public class LivingRoomTask {
         }
         List<LivingRoomVO> livingRooms = ConvertBeanUtil.convertList(list, LivingRoomVO.class);
         String tempKey = key + "_temp" + UUID.randomUUID().toString().substring(0, 8);
-        redisTemplate.opsForList().rightPushAll(tempKey, livingRooms);
+        redisTemplate.opsForList().rightPushAll(tempKey, livingRooms.toArray(new LivingRoomVO[0]));    // 必须以数组格式存储，否则整个list会被视为一个元素去存储
         // 先缓存到没人访问的temp中，再重命名，减少阻塞
         redisTemplate.rename(tempKey, key);
     }

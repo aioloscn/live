@@ -13,4 +13,6 @@ public interface LivingRoomRpc {
     void stopStreaming(StreamingDTO dto);
     
     PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model);
+    
+    LivingRoomVO queryByRoomId(Long roomId);
 }

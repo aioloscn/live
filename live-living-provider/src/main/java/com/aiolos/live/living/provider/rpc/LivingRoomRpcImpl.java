@@ -30,4 +30,9 @@ public class LivingRoomRpcImpl implements LivingRoomRpc {
     public PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model) {
         return liveLivingRoomService.queryLivingRoomList(model);
     }
+
+    @Override
+    public LivingRoomVO queryByRoomId(Long roomId) {
+        return liveLivingRoomService.queryByRoomId(roomId);
+    }
 }
