@@ -54,7 +54,9 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
             return null;
         ApiLivingRoomVO vo = new ApiLivingRoomVO();
         vo.setRoomId(roomId);
-        vo.setStreamerId(userId);
+        vo.setUserId(userId);
+        vo.setNickName(ContextInfo.getNickName());
+        vo.setAvatar(ContextInfo.getAvatar());
         return vo;
     }
 }

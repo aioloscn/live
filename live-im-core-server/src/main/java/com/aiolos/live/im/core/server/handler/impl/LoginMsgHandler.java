@@ -55,27 +55,31 @@ public class LoginMsgHandler implements SimpleHandler {
         Long userId = imTokenRpc.getUserIdByToken(token);
         if (userId != null && userId.equals(imMsgBody.getUserId())) {
 
-            // 保存用户id相关的channel对象信息
-            ChannelHandlerContextCache.put(userId, ctx);
-            ImContextUtil.setUserId(ctx, userId);
-            ImContextUtil.setAppId(ctx, appId);
-            
-            ImMsgBody respBody = new ImMsgBody();
-            respBody.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
-            respBody.setUserId(userId);
-            respBody.setData("true");
-            ImMsg respMsg = ImMsg.build(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(respBody));
-            // 绑定用户登录的服务器所在ip
-            stringRedisTemplate.opsForValue().set(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId), 
-                    ChannelHandlerContextCache.getServerIpAddress(), ImConstants.DEFAULT_HEARTBEAT_GAP * 2, TimeUnit.SECONDS);
-            
-            // 回写回给客户端
-            ctx.writeAndFlush(respMsg);
+            this.loginSuccessHandler(ctx, userId, appId);
             log.info("login successfully, userId: {}, appId: {}", userId, appId);
             return;
         }
 
         ctx.close();
         throw new IllegalArgumentException("token invalid");
+    }
+
+    public void loginSuccessHandler(ChannelHandlerContext ctx, Long userId, Integer appId) {
+        // 保存用户id相关的channel对象信息
+        ChannelHandlerContextCache.put(userId, ctx);
+        ImContextUtil.setUserId(ctx, userId);
+        ImContextUtil.setAppId(ctx, appId);
+
+        ImMsgBody respBody = new ImMsgBody();
+        respBody.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
+        respBody.setUserId(userId);
+        respBody.setData("true");
+        ImMsg respMsg = ImMsg.build(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(respBody));
+        // 绑定用户登录的服务器所在ip
+        stringRedisTemplate.opsForValue().set(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId),
+                ChannelHandlerContextCache.getServerIpAddress(), ImConstants.DEFAULT_HEARTBEAT_GAP * 2, TimeUnit.SECONDS);
+
+        // 回写回给客户端
+        ctx.writeAndFlush(respMsg);
     }
 }

@@ -1,9 +1,9 @@
 package com.aiolos.live.im.core.server.starter;
 
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
-import com.aiolos.live.im.core.server.common.ImMsgDecoder;
-import com.aiolos.live.im.core.server.common.ImMsgEncoder;
-import com.aiolos.live.im.core.server.handler.ImServerCoreHandler;
+import com.aiolos.live.im.core.server.common.TcpMsgDecoder;
+import com.aiolos.live.im.core.server.common.TcpMsgEncoder;
+import com.aiolos.live.im.core.server.handler.tcp.TcpImServerCoreHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -20,12 +20,16 @@ import org.springframework.core.env.Environment;
 
 @Slf4j
 @Configuration
-public class NettyImServerApplication implements InitializingBean {
+public class TcpImServerApplication implements InitializingBean {
     
-    @Value("${im.port}")
+    @Value("${im.tcp.port}")
     private int port;
+    @Value("${im.bind.server.ip}")
+    private String imBindServerIp;
+    @Value("${im.bind.server.port}")
+    private Integer imBindServerPort;
     @Resource
-    private ImServerCoreHandler imServerCoreHandler;
+    private TcpImServerCoreHandler tcpImServerCoreHandler;
     @Resource
     private Environment environment;
 
@@ -41,13 +45,11 @@ public class NettyImServerApplication implements InitializingBean {
             @Override
             protected void initChannel(Channel channel) throws Exception {
                 log.info("初始化连接渠道");
-                // 设计消息体
-                
                 // 增加编解码器
-                channel.pipeline().addLast(new ImMsgDecoder());
-                channel.pipeline().addLast(new ImMsgEncoder());
+                channel.pipeline().addLast(new TcpMsgDecoder());
+                channel.pipeline().addLast(new TcpMsgEncoder());
                 // 设置这个netty处理handler
-                channel.pipeline().addLast(imServerCoreHandler);
+                channel.pipeline().addLast(tcpImServerCoreHandler);
             }
         });
         // 基于JVM的钩子函数去实现优雅关闭
@@ -56,12 +58,10 @@ public class NettyImServerApplication implements InitializingBean {
             workerGroup.shutdownGracefully();
         }));
 
-        String dubboIpToRegistry = environment.getProperty("DUBBO_IP_TO_REGISTRY");
-        String dubboPortToBind = environment.getProperty("DUBBO_PORT_TO_BIND");
-        if (StringUtils.isBlank(dubboIpToRegistry) || StringUtils.isBlank(dubboPortToBind)) {
+        if (StringUtils.isBlank(imBindServerIp) || imBindServerPort == null) {
             throw new IllegalArgumentException("The registered IP and port in the startup parameters cannot be empty!");
         }
-        ChannelHandlerContextCache.setServerIpAddress(dubboIpToRegistry + ":" + dubboPortToBind);
+        ChannelHandlerContextCache.setServerIpAddress(imBindServerIp + ":" + imBindServerPort);
 
         ChannelFuture channelFuture = bootstrap.bind(port).sync();
         log.info("IM服务启动成功，监听端口：{}", port);

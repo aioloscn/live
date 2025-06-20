@@ -1,8 +1,8 @@
 package client.handler;
 
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.common.ImMsgDecoder;
-import com.aiolos.live.im.core.server.common.ImMsgEncoder;
+import com.aiolos.live.im.core.server.common.TcpMsgDecoder;
+import com.aiolos.live.im.core.server.common.TcpMsgEncoder;
 import com.aiolos.live.im.interfaces.constants.AppIdEnum;
 import com.aiolos.live.im.interfaces.constants.BizCodeEnum;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
@@ -45,8 +45,8 @@ public class ImClientHandler implements InitializingBean {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    socketChannel.pipeline().addLast(new ImMsgDecoder());
-                    socketChannel.pipeline().addLast(new ImMsgEncoder());
+                    socketChannel.pipeline().addLast(new TcpMsgDecoder());
+                    socketChannel.pipeline().addLast(new TcpMsgEncoder());
                     socketChannel.pipeline().addLast(new ClientHandler());
                     socketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                         @Override

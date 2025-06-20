@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 消息解码器
  */
-public class ImMsgDecoder extends ByteToMessageDecoder {
+public class TcpMsgDecoder extends ByteToMessageDecoder {
     
     private static final int BASE_LEN = 2 + 4 + 4;  // short + int + int
     

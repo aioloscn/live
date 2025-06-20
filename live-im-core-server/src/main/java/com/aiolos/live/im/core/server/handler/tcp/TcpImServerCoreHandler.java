@@ -1,9 +1,10 @@
-package com.aiolos.live.im.core.server.handler;
+package com.aiolos.live.im.core.server.handler.tcp;
 
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
+import com.aiolos.live.im.core.server.handler.ImHandlerFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ChannelHandler.Sharable    // 需确保线程安全
-public class ImServerCoreHandler extends SimpleChannelInboundHandler {
+public class TcpImServerCoreHandler extends SimpleChannelInboundHandler {
 
     @Resource
     private ImHandlerFactory imHandlerFactory;

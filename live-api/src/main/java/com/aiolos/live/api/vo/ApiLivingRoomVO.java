@@ -6,5 +6,7 @@ import lombok.Data;
 public class ApiLivingRoomVO {
     
     private Long roomId;
-    private Long streamerId;
+    private Long userId;
+    private String nickName;
+    private String avatar;
 }

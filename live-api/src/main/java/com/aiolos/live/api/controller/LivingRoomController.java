@@ -52,8 +52,8 @@ public class LivingRoomController {
         return homeLivingRoomService.queryLivingRoomList(model);
     }
     
-    @PostMapping("/streamer-config")
-    public ApiLivingRoomVO streamerConfig(Long roomId) {
+    @PostMapping("/anchor-config")
+    public ApiLivingRoomVO anchorConfig(Long roomId) {
         Long userId = ContextInfo.getUserId();
         if (userId == null || roomId == null) {
             return null;

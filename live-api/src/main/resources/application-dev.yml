@@ -1,0 +1,33 @@
+#server:
+#  port: 8808
+#
+#spring:
+#  application:
+#    name: live-api
+#
+#dubbo:
+#  application:
+#    name: dubbo-live-api
+#    qos-enable: false
+#  registry:
+#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
+#  consumer:
+#    retries: 2
+#    timeout: 5000 # 全局默认超时，控制消费者调用服务时的等待时间
+#    check: false
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health
+#  endpoint:
+#    health:
+#      show-details: always
+#
+#im:
+#  service-instance: dubbo-live-im-core-server
+#  ws:
+#    port: 19990
+#  tcp:
+#    port: 19991

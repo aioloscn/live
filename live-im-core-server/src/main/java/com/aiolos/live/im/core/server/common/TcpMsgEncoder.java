@@ -7,7 +7,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 /**
  * 处理消息的编码
  */
-public class ImMsgEncoder extends MessageToByteEncoder {
+public class TcpMsgEncoder extends MessageToByteEncoder {
     
     @Override
     protected void encode(ChannelHandlerContext ctx, Object o, ByteBuf byteBuf) throws Exception {
