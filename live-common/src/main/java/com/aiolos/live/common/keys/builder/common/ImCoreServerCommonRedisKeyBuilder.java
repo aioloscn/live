@@ -12,6 +12,6 @@ public class ImCoreServerCommonRedisKeyBuilder extends RedisKeyBuilder {
     }
 
     public String buildImBindIpKey(Integer appId, Long userId) {
-        return IM_BIND_IP_KEY + getSplit() + appId + "#" + userId;
+        return IM_BIND_IP_KEY + getSplit() + appId + "%23" + userId;
     }
 }

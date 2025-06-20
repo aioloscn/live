@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @Component
@@ -57,10 +59,13 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         UserDTO userDTO = userRpc.getUserIdByToken(token);
         if (userDTO == null || userDTO.getUserId() == null)
             return Mono.empty();
-        // 将userId放入请求头，下游服务可以从请求头中获取
+        // 将用户信息放入请求头，下游服务可以从请求头中获取，再放入ContextInfo中
         ServerHttpRequest.Builder builder = request.mutate();
         builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), String.valueOf(userDTO.getUserId()));
-        builder.header(GatewayHeaderEnum.USER_INFO_JSON.getHeaderName(), JSON.toJSONString(userDTO));
+
+        String userJson = JSON.toJSONString(userDTO);
+        String encodedJson = Base64.getEncoder().encodeToString(userJson.getBytes(StandardCharsets.UTF_8));
+        builder.header(GatewayHeaderEnum.USER_INFO_JSON.getHeaderName(), encodedJson);
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
 

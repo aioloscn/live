@@ -10,7 +10,7 @@ import com.aiolos.live.model.po.LivingRoom;
 import com.aiolos.live.service.LivingRoomService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,14 +30,14 @@ public class LivingRoomTask {
     private LivingRoomRedisKeyBuilder livingRoomRedisKeyBuilder;
     @Autowired
     private LivingRoomService livingRoomService;
-    @Resource
-    private Environment environment;
+
+    @Value("${task.refresh-living-room.ip}")
+    private String dubboIpToRegistry;
 
     @Scheduled(cron = "*/1 * * * * ?")
     public void refreshLivingRoomCache() {
         // 尝试获取分布式锁，1秒钟过期
         String lockKey = "live:livingRoom:lock";
-        String dubboIpToRegistry = environment.getProperty("DUBBO_IP_TO_REGISTRY");
         Boolean locked = redisTemplate.opsForValue().setIfAbsent(lockKey, dubboIpToRegistry, 1, TimeUnit.SECONDS);
         if (locked) {
             try {

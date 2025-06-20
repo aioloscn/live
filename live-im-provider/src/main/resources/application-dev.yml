@@ -1,0 +1,23 @@
+#spring:
+#  application:
+#    name: live-im-provider
+#  data:
+#    redis:
+#      port: 6379
+#      host: ${REDIS_HOST:127.0.0.1}
+#      database: 0
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-idle: 20
+#          max-active: 50
+#
+#dubbo:
+#  protocol:
+#    name: dubbo
+#    port: 20890
+#  application:
+#    name: dubbo-live-im-provider
+#    qos-enable: false
+#  registry:
+#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos

@@ -19,7 +19,7 @@ public class ImTokenServiceImpl implements ImTokenService {
     
     @Override
     public String createImLoginToken(Long userId, Integer appId) {
-        String token = UUID.randomUUID() + "#" + appId;
+        String token = UUID.randomUUID() + "%23" + appId; // 前端创建WebSocket会用到，所以不能用#，片段标识符后面内容不会发送到服务器
         redisTemplate.opsForValue().set(imProviderRedisKeyBuilder.buildImLoginTokenKey(token), userId, 5, TimeUnit.MINUTES);
         return token;
     }
