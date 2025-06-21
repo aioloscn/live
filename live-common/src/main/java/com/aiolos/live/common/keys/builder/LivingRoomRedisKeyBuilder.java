@@ -6,6 +6,7 @@ public class LivingRoomRedisKeyBuilder extends RedisKeyBuilder {
 
     private final static String LIVING_ROOM_OBJ_KEY = "livingRoomObj";
     private final static String LIVING_ROOM_LIST_KEY = "livingRoomList";
+    private final static String LIVING_ROOM_USER_SET_KEY = "livingRoomUserSet";
     
     public LivingRoomRedisKeyBuilder(RedisKeyProperties redisKeyProperties) {
         super(redisKeyProperties);
@@ -17,5 +18,9 @@ public class LivingRoomRedisKeyBuilder extends RedisKeyBuilder {
     
     public String buildLivingRoomListKey(Integer type) {
         return getPrefix() + LIVING_ROOM_LIST_KEY + getSplit() + type;
+    }
+    
+    public String buildLivingRoomUserSetKey(Long roomId, Integer appId) {
+        return getPrefix() + LIVING_ROOM_USER_SET_KEY + getSplit() + + appId + getSplit() + roomId;
     }
 }

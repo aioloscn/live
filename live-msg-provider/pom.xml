@@ -42,6 +42,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-im-router-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-living-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

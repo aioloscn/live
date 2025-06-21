@@ -1,12 +1,20 @@
 package com.aiolos.live.im.core.server.interfaces;
 
-import com.aiolos.live.im.core.server.dto.RouterHandlerMsgDTO;
+import com.aiolos.live.im.interfaces.dto.ImMsgBody;
+
+import java.util.List;
 
 public interface RouterHandlerRpc {
 
     /**
      * 按照用户id进行发送消息
-     * @param dto
+     * @param imMsgBody
      */
-    void sendMsg(RouterHandlerMsgDTO dto);
+    void sendMsg(ImMsgBody imMsgBody);
+
+    /**
+     * 向同一个节点的用户发送消息
+     * @param msgBodyList
+     */
+    void batchSendMsg(List<ImMsgBody> msgBodyList);
 }

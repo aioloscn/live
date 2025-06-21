@@ -3,6 +3,8 @@ package com.aiolos.live.im.core.server.mq.producer;
 import com.aiolos.live.common.constants.mq.ImRocketMQBindingNames;
 import com.aiolos.live.common.message.ImAckDelayMessage;
 import com.aiolos.live.common.message.ImBizMessage;
+import com.aiolos.live.common.message.ImOnlineMessage;
+import com.aiolos.live.common.message.ImOfflineMessage;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
@@ -27,10 +29,10 @@ public class ImMsgProducer {
         ImBizMessage message = new ImBizMessage();
         message.setBody(body);
         boolean sent = streamBridge.send(ImRocketMQBindingNames.IM_BIZ_MSG, MessageBuilder.withPayload(message).build());
-        if (!sent)
-            log.error("发送biz消息失败");
-        else
+        if (sent)
             log.info("已发送biz消息");
+        else
+            log.error("发送biz消息失败");
     }
 
     /**
@@ -42,9 +44,25 @@ public class ImMsgProducer {
         message.setBodyJson(JSON.toJSONString(body));
         boolean sent = streamBridge.send(ImRocketMQBindingNames.IM_ACK_DELAY_MSG,
                 MessageBuilder.withPayload(message).setHeader(MessageConst.PROPERTY_DELAY_TIME_LEVEL, 2).build());
-        if (!sent)
-            log.error("发送ack延迟消息失败");
-        else
+        if (sent)
             log.info("已发送ack延迟消息");
+        else
+            log.error("发送ack延迟消息失败");
+    }
+
+    public void sendOnlineMsg(ImOnlineMessage message) {
+        boolean sent = streamBridge.send(ImRocketMQBindingNames.IM_ONLINE_MSG, MessageBuilder.withPayload(message).build());
+        if (sent)
+            log.info("已发送im登录消息");
+        else
+            log.error("发送im登录消息失败");
+    }
+    
+    public void sendOfflineMsg(ImOfflineMessage message) {
+        boolean sent = streamBridge.send(ImRocketMQBindingNames.IM_OFFLINE_MSG, MessageBuilder.withPayload(message).build());
+        if (sent)
+            log.info("已发送im登出消息");
+        else
+            log.error("发送im登出消息失败");
     }
 }

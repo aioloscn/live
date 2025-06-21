@@ -8,8 +8,10 @@ import com.aiolos.live.common.wrapper.Page;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
 import com.aiolos.live.living.dto.LivingRoomListDTO;
+import com.aiolos.live.living.dto.LivingRoomUserDTO;
 import com.aiolos.live.living.dto.StreamingDTO;
 import com.aiolos.live.living.provider.service.LiveLivingRoomService;
+import com.aiolos.live.living.vo.LivingRoomUserVO;
 import com.aiolos.live.living.vo.LivingRoomVO;
 import com.aiolos.live.model.po.LivingRoom;
 import com.aiolos.live.model.po.LivingRoomRecord;
@@ -17,10 +19,13 @@ import com.aiolos.live.service.LivingRoomRecordService;
 import com.aiolos.live.service.LivingRoomService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -95,6 +100,19 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
         }
         LivingRoomVO vo = ConvertBeanUtil.convert(livingRoom, LivingRoomVO.class);
         redisTemplate.opsForValue().set(key, vo, 30, TimeUnit.MINUTES);
+        return vo;
+    }
+
+    @Override
+    public LivingRoomUserVO queryLivingRoomUser(LivingRoomUserDTO dto) {
+        String key = livingRoomRedisKeyBuilder.buildLivingRoomUserSetKey(dto.getRoomId(), dto.getAppId());
+        Cursor<Object> cursor = redisTemplate.opsForSet().scan(key, ScanOptions.scanOptions().match("*").count(500).build());
+        LivingRoomUserVO vo = new LivingRoomUserVO();
+        List<Long> userIds = new ArrayList<>();
+        vo.setUserIds(userIds);
+        while (cursor.hasNext()) {
+            userIds.add(Long.parseLong(cursor.next().toString()));
+        }
         return vo;
     }
 }

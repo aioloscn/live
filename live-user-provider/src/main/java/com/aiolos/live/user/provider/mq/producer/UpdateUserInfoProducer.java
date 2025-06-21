@@ -23,10 +23,10 @@ public class UpdateUserInfoProducer {
         message.setUserCacheEnum(UserCacheEnum.USER_INFO_CACHE);
         boolean sent = streamBridge.send(UserRocketMQBindingNames.CACHE_ASYNC_DELETE, 
                 MessageBuilder.withPayload(message).setHeader(MessageConst.PROPERTY_DELAY_TIME_LEVEL, 1).build());
-        if (!sent)
-            log.error("发送删除用户{}缓存的延迟消息失败", userId);
-        else
+        if (sent)
             log.info("已发送删除用户{}缓存的延迟消息", userId);
+        else
+            log.error("发送删除用户{}缓存的延迟消息失败", userId);
     }
 
     public void deleteUserTagCache(Long userId) {
@@ -35,9 +35,9 @@ public class UpdateUserInfoProducer {
         message.setUserCacheEnum(UserCacheEnum.USER_TAG_CACHE);
         boolean sent = streamBridge.send(UserRocketMQBindingNames.CACHE_ASYNC_DELETE,
                 MessageBuilder.withPayload(message).setHeader(MessageConst.PROPERTY_DELAY_TIME_LEVEL, 1).build());
-        if (!sent)
-            log.error("发送删除用户{}tag缓存的延迟消息失败", userId);
-        else
+        if (sent)
             log.info("已发送删除用户{}tag缓存的延迟消息", userId);
+        else
+            log.error("发送删除用户{}tag缓存的延迟消息失败", userId);
     }
 }

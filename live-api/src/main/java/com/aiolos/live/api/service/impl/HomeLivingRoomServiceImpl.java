@@ -50,7 +50,7 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
     @Override
     public ApiLivingRoomVO queryByRoomId(Long userId, Long roomId) {
         LivingRoomVO livingRoomVO = livingRoomRpc.queryByRoomId(roomId);
-        if (livingRoomVO == null || livingRoomVO.getStreamerId() == null || !livingRoomVO.getStreamerId().equals(userId))
+        if (livingRoomVO == null || livingRoomVO.getStreamerId() == null || userId == null)
             return null;
         ApiLivingRoomVO vo = new ApiLivingRoomVO();
         vo.setRoomId(roomId);

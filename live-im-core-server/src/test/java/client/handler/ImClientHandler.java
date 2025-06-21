@@ -79,6 +79,7 @@ public class ImClientHandler implements InitializingBean {
                     body.setBizCode(BizCodeEnum.LIVING_CHAT_MSG.getCode());
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", userId);
+                    // 测试中一对一发送消息，后续没有receiverId，而是roomId，并且根据roomId拉取用户推送消息
                     jsonObject.put("receiverId", receiverId);
                     jsonObject.put("content", content);
                     body.setData(JSON.toJSONString(jsonObject));

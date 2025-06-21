@@ -1,16 +1,19 @@
 package com.aiolos.live.im.core.server.handler.impl;
 
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
+import com.aiolos.live.common.message.ImOfflineMessage;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
 import com.aiolos.live.im.core.server.handler.SimpleHandler;
+import com.aiolos.live.im.core.server.mq.producer.ImMsgProducer;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +25,8 @@ public class LogoutMsgHandler implements SimpleHandler {
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder;
+    @Autowired
+    private ImMsgProducer imMsgProducer;
     
     @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
@@ -33,6 +38,11 @@ public class LogoutMsgHandler implements SimpleHandler {
         }
         
         // 将im消息回写给客户端
+        this.logoutHandler(ctx, userId, appId);
+        this.sendOfflineMQ(ctx, userId, appId);
+    }
+
+    private void logoutHandler(ChannelHandlerContext ctx, Long userId, Integer appId) {
         ImMsgBody respBody = new ImMsgBody();
         respBody.setAppId(appId);
         respBody.setUserId(userId);
@@ -46,5 +56,14 @@ public class LogoutMsgHandler implements SimpleHandler {
         ImContextUtil.removeUserId(ctx);
         ImContextUtil.removeAppId(ctx);
         ctx.close();
+    }
+
+    private void sendOfflineMQ(ChannelHandlerContext ctx, Long userId, Integer appId) {
+        ImOfflineMessage message = new ImOfflineMessage();
+        message.setUserId(userId);
+        message.setAppId(appId);
+        message.setRoomId(ImContextUtil.getRoomId(ctx));
+        message.setLogoutTime(System.currentTimeMillis());
+        imMsgProducer.sendOfflineMsg(message);
     }
 }

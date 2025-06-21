@@ -55,11 +55,6 @@ public class WsImServerApplication implements InitializingBean {
                 channel.pipeline().addLast(new HttpServerCodec());
                 // 处理大文件/大数据的分块写入，防止大数据传输内存溢出
                 channel.pipeline().addLast(new ChunkedWriteHandler());
-                channel.pipeline().addLast(new HttpRequestDecoder(
-                        4096, // 初始行最大长度
-                        8192, // 头部最大长度
-                        1048576 // 内容最大长度（被HttpObjectAggregator覆盖）
-                ));
                 // 将多个http消息片段聚合成完整的 FullHttpRequest 或 FullHttpResponse，最大聚合内容长度设置为 1MB
                 channel.pipeline().addLast(new HttpObjectAggregator(1024 * 1024));
                 channel.pipeline().addLast(new WebSocketEncoder());

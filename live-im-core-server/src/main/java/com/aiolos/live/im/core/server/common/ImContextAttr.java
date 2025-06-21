@@ -10,4 +10,6 @@ public class ImContextAttr {
     public static AttributeKey<Long> USER_ID = AttributeKey.valueOf("userId");
     
     public static AttributeKey<Integer> APP_ID = AttributeKey.valueOf("appId");
+    
+    public static AttributeKey<Long> ROOM_ID = AttributeKey.valueOf("roomId");
 }

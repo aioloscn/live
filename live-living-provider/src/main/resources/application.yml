@@ -14,6 +14,22 @@ spring:
       discovery:
         server-addr: ${config.nacos.host}
         namespace: live-test
+    stream:
+      function:
+        definition: imOnlineMsg;imOfflineMsg
+      bindings:
+        imOnlineMsg-in-0:
+          destination: live-im-online-msg-topic
+          group: im-online-msg-group
+          content-type: application/json
+        imOfflineMsg-in-0:
+          destination: live-im-offline-msg-topic
+          group: im-offline-msg-group
+          content-type: application/json
+      rocketmq:
+        binder:
+          name-server: ${ROCKETMQ_HOST:192.168.0.100}:9876
+          enable-msg-trace: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/live?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true

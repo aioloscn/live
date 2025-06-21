@@ -2,7 +2,6 @@ package com.aiolos.live.im.core.server.service.impl;
 
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.dto.RouterHandlerMsgDTO;
 import com.aiolos.live.im.core.server.service.MsgAckService;
 import com.aiolos.live.im.core.server.service.RouterHandlerService;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
@@ -22,12 +21,11 @@ public class RouterHandlerServiceImpl implements RouterHandlerService {
     private MsgAckService msgAckService;
     
     @Override
-    public void receiveMsg(RouterHandlerMsgDTO dto) {
-        ImMsgBody imMsgBody = dto.getImMsgBody();
+    public void receiveMsg(ImMsgBody imMsgBody) {
         if (sendMsgToClient(imMsgBody)) {
             // 当im服务器推送了消息给客户端，记录下ack map，当客户端ack后删除
-            msgAckService.recordMsgAck(dto.getImMsgBody(), 1);
-            msgAckService.sendDelayMsg(dto.getImMsgBody());
+            msgAckService.recordMsgAck(imMsgBody, 1);
+            msgAckService.sendDelayMsg(imMsgBody);
         }
     }
 

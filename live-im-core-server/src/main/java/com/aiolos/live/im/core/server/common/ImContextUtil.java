@@ -30,4 +30,16 @@ public class ImContextUtil {
     public static void removeAppId(ChannelHandlerContext ctx) {
         ctx.channel().attr(ImContextAttr.APP_ID).remove();
     }
+    
+    public static void setRoomId(ChannelHandlerContext ctx, Long roomId) {
+        ctx.channel().attr(ImContextAttr.ROOM_ID).set(roomId);
+    }
+    
+    public static Long getRoomId(ChannelHandlerContext ctx) {
+        return ctx.channel().attr(ImContextAttr.ROOM_ID).get();
+    }
+    
+    public static void removeRoomId(ChannelHandlerContext ctx) {
+        ctx.channel().attr(ImContextAttr.ROOM_ID).remove();
+    }
 }

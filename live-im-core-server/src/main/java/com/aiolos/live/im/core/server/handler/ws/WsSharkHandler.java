@@ -54,7 +54,7 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest request) {
         String webSocketUrl = "ws://" + serverIp + ":" + port;
 
-        Long userId = null, queryUserId = null;
+        Long userId = null, queryUserId = null, roomId = null;
         Integer appId = null;
         String selectedProtocol = null;
         String authData = null;
@@ -98,6 +98,7 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
                 // 提取认证信息
                 String token = authInfo.getString("token");
                 userId = authInfo.getLong("userId");
+                roomId = authInfo.getLong("roomId");
                 queryUserId = imTokenRpc.getUserIdByToken(token);
                 appId = Integer.valueOf(token.substring(token.lastIndexOf("%23") + 3));
 
@@ -123,7 +124,7 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
         ChannelFuture channelFuture = webSocketServerHandshaker.handshake(ctx.channel(), request);
         // 首次握手建立ws连接后返回消息给客户端
         if (channelFuture.isSuccess()) {
-            loginMsgHandler.loginSuccessHandler(ctx, userId, appId);
+            loginMsgHandler.loginSuccessHandler(ctx, userId, appId, roomId);
             log.info("[WebSocketSharkHandler] channel is connect! user is {}", userId);
         }
     }

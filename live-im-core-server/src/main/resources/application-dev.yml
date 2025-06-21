@@ -4,13 +4,19 @@
 #  cloud:
 #    stream:
 #      function:
-#        definition: imBizMsg;imAckDelayMsg
+#        definition: imBizMsg;imAckDelayMsg;imOnlineMsg;imOfflineMsg
 #      bindings:
 #        imBizMsg-out-0:
 #          destination: live-im-biz-msg-topic
 #          content-type: application/json
 #        imAckDelayMsg-out-0:
 #          destination: live-im-ack-delay-msg-topic
+#          content-type: application/json
+#        imOnlineMsg-out-0:
+#          destination: live-im-online-msg-topic
+#          content-type: application/json
+#        imOfflineMsg-out-0:
+#          destination: live-im-offline-msg-topic
 #          content-type: application/json
 #        imAckDelayMsg-in-0:
 #          destination: live-im-ack-delay-msg-topic

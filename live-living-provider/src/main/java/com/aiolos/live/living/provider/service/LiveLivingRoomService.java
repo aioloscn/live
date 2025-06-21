@@ -3,7 +3,9 @@ package com.aiolos.live.living.provider.service;
 import com.aiolos.live.common.wrapper.PageModel;
 import com.aiolos.live.common.wrapper.PageResult;
 import com.aiolos.live.living.dto.LivingRoomListDTO;
+import com.aiolos.live.living.dto.LivingRoomUserDTO;
 import com.aiolos.live.living.dto.StreamingDTO;
+import com.aiolos.live.living.vo.LivingRoomUserVO;
 import com.aiolos.live.living.vo.LivingRoomVO;
 
 public interface LiveLivingRoomService {
@@ -29,4 +31,11 @@ public interface LiveLivingRoomService {
     PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model);
     
     LivingRoomVO queryByRoomId(Long roomId);
+
+    /**
+     * 根据房间id查询用户列表
+     * @param dto
+     * @return
+     */
+    LivingRoomUserVO queryLivingRoomUser(LivingRoomUserDTO dto);
 }
