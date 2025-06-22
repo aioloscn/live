@@ -44,7 +44,7 @@ public class ImServiceImpl implements ImService {
     private void buildImServerAddress(ImConfigVO vo) {
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceInstance);
         if (instances.isEmpty()) {
-            throw new RuntimeException("No IM service instance available!");
+            throw new RuntimeException("No IM core service instance available!");
         }
         Collections.shuffle(instances); // 简单的随机负载均衡
         ServiceInstance instance = instances.get(0);

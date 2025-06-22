@@ -52,11 +52,7 @@ public class ImMsgConsumer {
                         respBody.setUserId(userId);
                         respBody.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
                         respBody.setBizCode(BizCodeEnum.LIVING_CHAT_MSG.getCode());
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("content", messageDTO.getContent());
-                        jsonObject.put("senderName", messageDTO.getSenderName());
-                        jsonObject.put("senderAvatar", messageDTO.getSenderAvatar());
-                        respBody.setData(JSON.toJSONString(jsonObject));
+                        respBody.setData(imMsgBody.getData());
                         imMsgBodies.add(respBody);
                     });
                     imRouterRpc.batchSendMsg(imMsgBodies);
