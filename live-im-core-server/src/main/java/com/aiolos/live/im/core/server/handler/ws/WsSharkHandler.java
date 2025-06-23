@@ -1,7 +1,7 @@
 package com.aiolos.live.im.core.server.handler.ws;
 
 import com.aiolos.live.im.core.server.handler.impl.LoginMsgHandler;
-import com.aiolos.live.im.interfaces.interfaces.ImTokenRpc;
+import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.*;

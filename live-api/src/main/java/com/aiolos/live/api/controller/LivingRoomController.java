@@ -55,7 +55,7 @@ public class LivingRoomController {
     @PostMapping("/anchor-config")
     public ApiLivingRoomVO anchorConfig(Long roomId) {
         Long userId = ContextInfo.getUserId();
-        if (userId == null || roomId == null) {
+        if (roomId == null) {
             return null;
         }
         return homeLivingRoomService.queryByRoomId(userId, roomId);

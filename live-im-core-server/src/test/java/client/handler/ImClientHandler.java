@@ -7,7 +7,7 @@ import com.aiolos.live.im.interfaces.constants.AppIdEnum;
 import com.aiolos.live.im.interfaces.constants.BizCodeEnum;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
-import com.aiolos.live.im.interfaces.interfaces.ImTokenRpc;
+import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import io.netty.bootstrap.Bootstrap;

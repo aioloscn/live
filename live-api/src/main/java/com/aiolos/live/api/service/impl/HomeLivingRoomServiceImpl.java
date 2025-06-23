@@ -1,5 +1,6 @@
 package com.aiolos.live.api.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.aiolos.common.model.ContextInfo;
 import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.api.bo.LivingRoomListBO;
@@ -49,14 +50,15 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
 
     @Override
     public ApiLivingRoomVO queryByRoomId(Long userId, Long roomId) {
-        LivingRoomVO livingRoomVO = livingRoomRpc.queryByRoomId(roomId);
-        if (livingRoomVO == null || livingRoomVO.getStreamerId() == null || userId == null)
-            return null;
         ApiLivingRoomVO vo = new ApiLivingRoomVO();
         vo.setRoomId(roomId);
         vo.setUserId(userId);
         vo.setNickName(ContextInfo.getNickName());
         vo.setAvatar(ContextInfo.getAvatar());
+        LivingRoomVO livingRoomVO = livingRoomRpc.queryByRoomId(roomId);
+        if (livingRoomVO != null && livingRoomVO.getStreamerId() != null) {
+            BeanUtil.copyProperties(livingRoomVO, vo);
+        }
         return vo;
     }
 }

@@ -1,6 +1,6 @@
 package com.aiolos.live.im.provider.rpc;
 
-import com.aiolos.live.im.interfaces.interfaces.ImOnlineRpc;
+import com.aiolos.live.im.interfaces.ImOnlineRpc;
 import com.aiolos.live.im.provider.service.ImOnlineService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;

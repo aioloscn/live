@@ -1,4 +1,4 @@
-package com.aiolos.live.api.vo;
+package com.aiolos.live.im.provider.vo;
 
 import lombok.Data;
 

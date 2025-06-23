@@ -48,7 +48,7 @@ public class HeartbeatMsgHandler implements SimpleHandler {
         // 该客户端5分钟内没有发送心跳包则清空所有心跳记录表示断开
         redisTemplate.expire(heartbeatZSetKey, 5, TimeUnit.MINUTES);
         // 延长用户绑定的所在服务器ip的缓存有效期
-        stringRedisTemplate.expire(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId), ImConstants.DEFAULT_HEARTBEAT_GAP * 2, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId), ImConstants.DEFAULT_HEARTBEAT_GAP * 5, TimeUnit.SECONDS);
 
         ImMsgBody respBody  = new ImMsgBody();
         respBody.setUserId(userId);

@@ -1,10 +1,10 @@
-package com.aiolos.live.api.service.impl;
+package com.aiolos.live.im.provider.service.impl;
 
 import com.aiolos.common.model.ContextInfo;
-import com.aiolos.live.api.service.ImService;
-import com.aiolos.live.api.vo.ImConfigVO;
 import com.aiolos.live.im.interfaces.constants.AppIdEnum;
-import com.aiolos.live.im.interfaces.interfaces.ImTokenRpc;
+import com.aiolos.live.im.interfaces.ImTokenRpc;
+import com.aiolos.live.im.provider.service.ImService;
+import com.aiolos.live.im.provider.vo.ImConfigVO;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Value;

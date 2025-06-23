@@ -11,7 +11,6 @@ import com.aiolos.live.living.interfaces.LivingRoomRpc;
 import com.aiolos.live.living.vo.LivingRoomUserVO;
 import com.aiolos.live.msg.dto.MessageDTO;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.context.annotation.Bean;

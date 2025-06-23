@@ -1,7 +1,7 @@
-package com.aiolos.live.api.controller;
+package com.aiolos.live.im.provider.controller;
 
-import com.aiolos.live.api.service.ImService;
-import com.aiolos.live.api.vo.ImConfigVO;
+import com.aiolos.live.im.provider.service.ImService;
+import com.aiolos.live.im.provider.vo.ImConfigVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
