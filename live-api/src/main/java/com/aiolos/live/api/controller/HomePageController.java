@@ -24,7 +24,7 @@ public class HomePageController {
         Long userId = ContextInfo.getUserId();
         log.info("用户Id: {}", userId);
         HomePageVO vo = new HomePageVO();
-        if (userId != null) {
+        if (userId != null && !ContextInfo.isAnonymous()) {
             vo = homePageService.initPage(userId);
             vo.setLoginStatus(true);
         }

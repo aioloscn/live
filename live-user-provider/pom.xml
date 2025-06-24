@@ -39,6 +39,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-id-generator-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-account-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -12,10 +12,7 @@ import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +41,7 @@ public class ImRouterServiceImpl implements ImRouterService {
     public void batchSendMsg(List<ImMsgBody> imMsgBodies) {
         Map<Long, List<ImMsgBody>> userMsgBodyMap = imMsgBodies.stream().collect(Collectors.groupingBy(ImMsgBody::getUserId));
         List<String> serverIpAddressList = imMsgBodies.stream().map(o -> imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(o.getAppId(), o.getUserId())).collect(Collectors.toList());
-        List<String> ipUserList = stringRedisTemplate.opsForValue().multiGet(serverIpAddressList);
+        List<String> ipUserList = stringRedisTemplate.opsForValue().multiGet(serverIpAddressList).stream().filter(Objects::nonNull).toList();
         Map<String, List<Long>> ipUserMap = new HashMap<>();
         
         if (CollectionUtil.isNotEmpty(ipUserList)) {

@@ -11,8 +11,9 @@ import com.aiolos.live.im.interfaces.constants.AppIdEnum;
 import com.aiolos.live.im.interfaces.constants.ImConstants;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
-import com.aiolos.live.im.interfaces.interfaces.ImTokenRpc;
+import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +81,14 @@ public class LoginMsgHandler implements SimpleHandler {
         ImMsgBody respBody = new ImMsgBody();
         respBody.setAppId(AppIdEnum.LIVE_APP_ID.getCode());
         respBody.setUserId(userId);
-        respBody.setData("true");
+
+        JSONObject jsonObject = new JSONObject();
+        if (userId > 0) {
+            jsonObject.put("type", "NORMAL");
+        } else {
+            jsonObject.put("type", "ANONYMOUS");
+        }
+        respBody.setData(JSON.toJSONString(jsonObject));
         ImMsg respMsg = ImMsg.build(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(respBody));
         // 绑定用户登录的服务器所在ip
         stringRedisTemplate.opsForValue().set(imCoreServerCommonRedisKeyBuilder.buildImBindIpKey(appId, userId),

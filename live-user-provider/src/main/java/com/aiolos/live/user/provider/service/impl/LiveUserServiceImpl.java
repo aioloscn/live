@@ -1,10 +1,10 @@
 package com.aiolos.live.user.provider.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.aiolos.common.enums.errors.ErrorEnum;
 import com.aiolos.common.exception.utils.ExceptionUtil;
 import com.aiolos.common.utils.ConvertBeanUtil;
-import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
+import com.aiolos.live.account.interfaces.AccountTokenRpc;
+import com.aiolos.live.common.keys.builder.common.UserProviderCommonRedisKeyBuilder;
 import com.aiolos.live.common.keys.builder.common.MsgProviderCommonRedisKeyBuilder;
 import com.aiolos.live.id.generator.enums.IdPolicyEnum;
 import com.aiolos.live.id.generator.interfaces.IdGeneratorRpc;
@@ -46,42 +46,15 @@ public class LiveUserServiceImpl implements LiveUserService {
     @Autowired
     private UserService userService;
     @Resource
-    private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
+    private UserProviderCommonRedisKeyBuilder userProviderCommonRedisKeyBuilder;
     @Resource
     private MsgProviderCommonRedisKeyBuilder msgProviderCommonRedisKeyBuilder;
     @Autowired
     private UpdateUserInfoProducer updateUserInfoProducer;
     @DubboReference
     private IdGeneratorRpc idGeneratorRpc;
-    
-    @Override
-    public String createToken(Long userId) {
-        String token = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserTokenKey(token), userId, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
-        return token;
-    }
-
-    @Override
-    public UserDTO getUserIdByToken(String token) {
-        UserDTO dto = new UserDTO();
-        Long userId = null;
-        Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTokenKey(token));
-        if (obj instanceof Integer) {
-            userId = ((Integer) obj).longValue();
-        } else if (obj instanceof Long) {
-            userId = (Long) obj;
-        } else {
-            return dto;
-        }
-        dto.setUserId(userId);
-        Object userObj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserInfoKey(userId));
-        if (userObj != null) {
-            UserVO userVO = ConvertBeanUtil.convert(userObj, UserVO.class);
-            BeanUtil.copyProperties(userVO, dto);
-        }
-        
-        return dto;
-    }
+    @DubboReference
+    private AccountTokenRpc accountTokenRpc;
 
     @Override
     public UserVO login(LoginBO loginBO, HttpServletResponse response) {
@@ -115,12 +88,12 @@ public class LiveUserServiceImpl implements LiveUserService {
             UserThreadPoolManager.commonAsyncPool.execute(() -> userService.save(newUser));
         }
 
-        redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserInfoKey(userVO.getUserId()), userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(userProviderCommonRedisKeyBuilder.buildUserInfoKey(userVO.getUserId()), userVO, 7, TimeUnit.DAYS);
 
         redisTemplate.delete(smsRedisKey);
-        redisTemplate.delete(userProviderRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
+        redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
 
-        String token = this.createToken(userVO.getUserId());
+        String token = accountTokenRpc.createToken(userVO.getUserId());
         Cookie cookie = new Cookie("live-token", token);
         cookie.setDomain("live.aiolos.com");
         cookie.setPath("/");
@@ -132,11 +105,11 @@ public class LiveUserServiceImpl implements LiveUserService {
 
     @Override
     public UserVO getUserById(Long userId) {
-        if (userId == null) {
+        if (userId == null || userId <= 0) {
             return null;
         }
         
-        String userKey = userProviderRedisKeyBuilder.buildUserInfoKey(userId);
+        String userKey = userProviderCommonRedisKeyBuilder.buildUserInfoKey(userId);
         Object obj = redisTemplate.opsForValue().get(userKey);
         if (obj != null) {
             UserVO userVO = ConvertBeanUtil.convert(obj, UserVO.class);
@@ -144,7 +117,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         }
         UserVO userVO = ConvertBeanUtil.convert(userService.getById(userId), UserVO.class);
         if (userVO != null) {
-            redisTemplate.opsForValue().set(userKey, userVO, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(userKey, userVO, 7, TimeUnit.DAYS);
         } else {
             // 缓存空值
             redisTemplate.opsForValue().set(userKey, new UserVO(), 60, TimeUnit.SECONDS);
@@ -168,7 +141,7 @@ public class LiveUserServiceImpl implements LiveUserService {
         // 目前情况分库分表
         boolean updated = userService.updateById(ConvertBeanUtil.convert(userDTO, User.class));
         if (updated) {
-            redisTemplate.delete(userProviderRedisKeyBuilder.buildUserInfoKey(userDTO.getUserId()));
+            redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserInfoKey(userDTO.getUserId()));
             updateUserInfoProducer.deleteUserCache(userDTO.getUserId());
         }
     }
@@ -183,7 +156,7 @@ public class LiveUserServiceImpl implements LiveUserService {
             return Maps.newHashMap();
         }
 
-        List<String> keyList = userIds.stream().map(userId -> userProviderRedisKeyBuilder.buildUserInfoKey(userId)).collect(Collectors.toList());
+        List<String> keyList = userIds.stream().map(userId -> userProviderCommonRedisKeyBuilder.buildUserInfoKey(userId)).collect(Collectors.toList());
         List<UserVO> dtoListInRedis = redisTemplate.opsForValue().multiGet(keyList).stream()
                 .filter(Objects::nonNull).map(x -> ConvertBeanUtil.convert(x, UserVO.class)).collect(Collectors.toList());
 
@@ -212,11 +185,11 @@ public class LiveUserServiceImpl implements LiveUserService {
 
         // 从数据库查询出来的数据缓存到redis
         if (!CollectionUtils.isEmpty(dbQueryResult)) {
-            Map<String, UserVO> dbQueryMap = dbQueryResult.stream().collect(Collectors.toMap(dto -> userProviderRedisKeyBuilder.buildUserInfoKey(dto.getUserId()), Function.identity()));
+            Map<String, UserVO> dbQueryMap = dbQueryResult.stream().collect(Collectors.toMap(dto -> userProviderCommonRedisKeyBuilder.buildUserInfoKey(dto.getUserId()), Function.identity()));
             redisTemplate.opsForValue().multiSet(dbQueryMap);
             // 批量设置过期时间
             redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
-                dbQueryMap.keySet().forEach(key -> connection.keyCommands().expire(key.getBytes(), userProviderRedisKeyBuilder.get7DaysExpiration() + userProviderRedisKeyBuilder.randomExpireSeconds()));
+                dbQueryMap.keySet().forEach(key -> connection.keyCommands().expire(key.getBytes(), userProviderCommonRedisKeyBuilder.randomExpireSeconds( 60 * 60 * 24 * 7)));
                 return null;
             });
 
@@ -230,7 +203,7 @@ public class LiveUserServiceImpl implements LiveUserService {
     public UserVO queryByPhone(String phone) {
         if (StringUtils.isBlank(phone))
             return null;
-        String key = userProviderRedisKeyBuilder.buildUserPhoneKey(phone);
+        String key = userProviderCommonRedisKeyBuilder.buildUserPhoneKey(phone);
         Object obj = redisTemplate.opsForValue().get(key);
         if (obj != null) {
             // 可能是空缓存

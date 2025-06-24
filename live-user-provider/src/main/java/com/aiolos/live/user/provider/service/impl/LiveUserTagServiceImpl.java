@@ -2,7 +2,7 @@ package com.aiolos.live.user.provider.service.impl;
 
 import com.aiolos.common.utils.ConvertBeanUtil;
 import com.aiolos.live.common.constants.UserTagFieldNameConstants;
-import com.aiolos.live.common.keys.builder.UserProviderRedisKeyBuilder;
+import com.aiolos.live.common.keys.builder.common.UserProviderCommonRedisKeyBuilder;
 import com.aiolos.live.enums.UserTagEnum;
 import com.aiolos.live.model.po.UserTag;
 import com.aiolos.live.service.UserTagService;
@@ -27,7 +27,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private UserProviderRedisKeyBuilder userProviderRedisKeyBuilder;
+    private UserProviderCommonRedisKeyBuilder userProviderCommonRedisKeyBuilder;
     @Autowired
     private UserTagService userTagService;
     @Autowired
@@ -36,7 +36,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
     @Override
     public boolean setTag(Long userId, UserTagEnum userTagEnum) {
 
-        String setNXKey = userProviderRedisKeyBuilder.buildUserTagLockKey(userId);
+        String setNXKey = userProviderCommonRedisKeyBuilder.buildUserTagLockKey(userId);
         String setNXResult = redisTemplate.execute((RedisCallback<String>) connection -> {
             RedisSerializer keySerializer = redisTemplate.getKeySerializer();
             RedisSerializer valueSerializer = redisTemplate.getValueSerializer();
@@ -60,7 +60,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
                 userTag.setTagInfo01(userTag.getTagInfo01() | userTagEnum.getTag());
                 updated = userTagService.update(userTag, Wrappers.lambdaUpdate(UserTag.class).eq(UserTag::getUserId, userId));
 
-                redisTemplate.delete(userProviderRedisKeyBuilder.buildUserTagKey(userId));
+                redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId));
                 log.info("修改用户{}的标签{}, result: {}", userId, userTagEnum.getDesc(), updated);
             }
         } else {
@@ -86,7 +86,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
                 userTag.setTagInfo01(userTag.getTagInfo01() & ~userTagEnum.getTag());
                 updated = userTagService.update(userTag, Wrappers.lambdaUpdate(UserTag.class).eq(UserTag::getUserId, userId));
                 if (updated) {
-                    redisTemplate.delete(userProviderRedisKeyBuilder.buildUserTagKey(userId));
+                    redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId));
                     updateUserInfoProducer.deleteUserTagCache(userId);
                 }
             }
@@ -117,13 +117,13 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
     
     private UserTag getUserTagFromRedis(Long userId) {
         UserTag userTag = null;
-        Object obj = redisTemplate.opsForValue().get(userProviderRedisKeyBuilder.buildUserTagKey(userId));
+        Object obj = redisTemplate.opsForValue().get(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId));
         if (obj != null) {
             userTag = ConvertBeanUtil.convert(obj, UserTag.class);
         } else {
             userTag = userTagService.getOne(Wrappers.lambdaQuery(UserTag.class).eq(UserTag::getUserId, userId));
             if (userTag != null) {
-                redisTemplate.opsForValue().set(userProviderRedisKeyBuilder.buildUserTagKey(userId), userTag, userProviderRedisKeyBuilder.get7DaysExpiration(), TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId), userTag, 7, TimeUnit.DAYS);
             }
         }
         return userTag;

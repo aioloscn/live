@@ -30,6 +30,8 @@
     <module>live-im-router-provider</module>
     <module>live-living-interface</module>
     <module>live-living-provider</module>
+    <module>live-account-interface</module>
+    <module>live-account-provider</module>
   </modules>
 
   <properties>
@@ -47,6 +49,8 @@
     <live-service.version>1.0-SNAPSHOT</live-service.version>
     <live-user-interface.version>1.0-SNAPSHOT</live-user-interface.version>
     <live-user-provider.version>1.0-SNAPSHOT</live-user-provider.version>
+    <live-account-interface.version>1.0-SNAPSHOT</live-account-interface.version>
+    <live-account-provider.version>1.0-SNAPSHOT</live-account-provider.version>
     <live-id-generator-interface.version>1.0-SNAPSHOT</live-id-generator-interface.version>
     <live-id-generator-provider.version>1.0-SNAPSHOT</live-id-generator-provider.version>
     <live-msg-interface.version>1.0-SNAPSHOT</live-msg-interface.version>
@@ -104,6 +108,11 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-user-interface</artifactId>
         <version>${live-user-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-account-interface</artifactId>
+        <version>${live-account-interface.version}</version>
       </dependency>
       <dependency>
         <groupId>com.aiolos</groupId>

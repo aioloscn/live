@@ -10,10 +10,6 @@ import java.util.Map;
 
 public interface LiveUserService {
 
-    String createToken(Long userId);
-
-    UserDTO getUserIdByToken(String token);
-
     UserVO login(LoginBO loginBO, HttpServletResponse response);
 
     UserVO getUserById(Long userId);

@@ -8,7 +8,6 @@ public class RedisKeyBuilder {
 
     private final String applicationName;
     private static final String SPLIT = ":";
-    private static final long EXPIRE_7_DAYS = 60 * 60 * 24 * 7;
 
     public RedisKeyBuilder(RedisKeyProperties redisKeyProperties) {
         this.applicationName = redisKeyProperties.getName();
@@ -26,7 +25,7 @@ public class RedisKeyBuilder {
         return ThreadLocalRandom.current().nextInt(60, 3600);
     }
 
-    public long get7DaysExpiration() {
-        return EXPIRE_7_DAYS;
-    } 
+    public long randomExpireSeconds(long bound) {
+        return ThreadLocalRandom.current().nextLong(bound);
+    }
 }

@@ -21,16 +21,6 @@ public class UserRpcImpl implements UserRpc {
     private LiveUserService liveUserService;
 
     @Override
-    public String createToken(Long userId) {
-        return liveUserService.createToken(userId);
-    }
-
-    @Override
-    public UserDTO getUserIdByToken(String token) {
-        return liveUserService.getUserIdByToken(token);
-    }
-
-    @Override
     public UserDTO getUserById(Long userId) {
         return ConvertBeanUtil.convert(liveUserService.getUserById(userId), UserDTO.class);
     }

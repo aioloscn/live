@@ -1,4 +1,4 @@
-package com.aiolos.live.im.interfaces.interfaces;
+package com.aiolos.live.im.interfaces;
 
 public interface ImTokenRpc {
 

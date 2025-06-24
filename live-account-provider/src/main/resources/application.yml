@@ -1,0 +1,22 @@
+config:
+  service:
+    id: 1001  # 服务器唯一标识
+  nacos:
+    host: ${NACOS_HOST:127.0.0.1}:18848
+    
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+      config:
+        file-extension: yaml
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+        group: DEFAULT_GROUP
+  config:
+    import: 
+      - optional:nacos:live-account-provider-config.yaml
