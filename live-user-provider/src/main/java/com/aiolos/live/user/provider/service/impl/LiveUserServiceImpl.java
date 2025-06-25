@@ -18,18 +18,20 @@ import com.aiolos.live.user.provider.mq.producer.UpdateUserInfoProducer;
 import com.aiolos.live.user.provider.service.LiveUserService;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -55,6 +57,9 @@ public class LiveUserServiceImpl implements LiveUserService {
     private IdGeneratorRpc idGeneratorRpc;
     @DubboReference
     private AccountTokenRpc accountTokenRpc;
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     @Override
     public UserVO login(LoginBO loginBO, HttpServletResponse response) {
@@ -94,12 +99,15 @@ public class LiveUserServiceImpl implements LiveUserService {
         redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserPhoneKey(loginBO.getPhone()));
 
         String token = accountTokenRpc.createToken(userVO.getUserId());
-        Cookie cookie = new Cookie("live-token", token);
-        cookie.setDomain("live.aiolos.com");
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 30);
+        ResponseCookie cookie = ResponseCookie.from("live-token", token)
+                .maxAge(Duration.ofDays(30))
+                .httpOnly(true)
+                .secure(activeProfile.equalsIgnoreCase("prod")) // 仅https传输
+                .domain("live.aiolos.com")
+                .path("/")
+                .build();
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.addCookie(cookie);
+        response.setHeader("Set-Cookie", cookie.toString());
         return userVO;
     }
 

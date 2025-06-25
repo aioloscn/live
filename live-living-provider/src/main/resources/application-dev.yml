@@ -1,7 +1,9 @@
 config:
   nacos:
     host: ${NACOS_HOST:127.0.0.1}:18848
-    
+  rocketmq:
+    host: ${ROCKETMQ_HOST:127.0.0.1}:9876
+
 spring:
   cloud:
     nacos:
@@ -16,6 +18,5 @@ spring:
         namespace: live-test
         group: DEFAULT_GROUP
   config:
-    import: 
-      - optional:nacos:live-gateway-config.yaml
-    
+    import:
+      - optional:nacos:live-living-provider-config.yaml

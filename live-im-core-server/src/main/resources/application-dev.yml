@@ -1,58 +1,22 @@
-#spring:
-#  application:
-#    name: live-im-core-server
-#  cloud:
-#    stream:
-#      function:
-#        definition: imBizMsg;imAckDelayMsg;imOnlineMsg;imOfflineMsg
-#      bindings:
-#        imBizMsg-out-0:
-#          destination: live-im-biz-msg-topic
-#          content-type: application/json
-#        imAckDelayMsg-out-0:
-#          destination: live-im-ack-delay-msg-topic
-#          content-type: application/json
-#        imOnlineMsg-out-0:
-#          destination: live-im-online-msg-topic
-#          content-type: application/json
-#        imOfflineMsg-out-0:
-#          destination: live-im-offline-msg-topic
-#          content-type: application/json
-#        imAckDelayMsg-in-0:
-#          destination: live-im-ack-delay-msg-topic
-#          group: im-ack-delay-msg-group
-#          content-type: application/json
-#      rocketmq:
-#        binder:
-#          name-server: ${ROCKETMQ_HOST:192.168.0.100}:9876
-#          enable-msg-trace: true
-#  data:
-#    redis:
-#      port: 6379
-#      host: ${REDIS_HOST:127.0.0.1}
-#      database: 0
-#      lettuce:
-#        pool:
-#          min-idle: 10
-#          max-idle: 20
-#          max-active: 50
-#
-#dubbo:
-#  protocol:
-#    name: dubbo
-#    port: 20889
-#  application:
-#    name: dubbo-live-im-core-server
-#    qos-enable: false
-#  registry:
-#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
-#
-#im:
-#  bind:
-#    server:
-#      ip: 192.168.0.100 # 用户登录后保存用户和所在服务器的关系，用于转发消息时确定接收方的节点
-#      port: 20889
-#  ws:
-#    port: 19990
-#  tcp:
-#    port: 19991
+config:
+  nacos:
+    host: ${NACOS_HOST:127.0.0.1}:18848
+  ws:
+    ip: ${NACOS_HOST:127.0.0.1}
+    
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+      config:
+        file-extension: yaml
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+        group: DEFAULT_GROUP
+  config:
+    import: 
+      - optional:nacos:live-im-core-server-config.yaml

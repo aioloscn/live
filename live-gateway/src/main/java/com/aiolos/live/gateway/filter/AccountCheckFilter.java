@@ -9,6 +9,7 @@ import com.alibaba.fastjson2.JSON;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -33,6 +34,9 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
     
     @Resource
     private GatewayApplicationProperties gatewayApplicationProperties;
+    
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
     
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -112,7 +116,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
             ResponseCookie deviceCookie = ResponseCookie.from("device-id", deviceId)
                     .maxAge(Duration.ofDays(7))
                     .httpOnly(true)
-//                    .secure(true) // 仅https传输
+                    .secure(activeProfile.equalsIgnoreCase("prod")) // 仅https传输
                     .domain("live.aiolos.com")
                     .path("/")
                     .build();

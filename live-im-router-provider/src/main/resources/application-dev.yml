@@ -1,0 +1,24 @@
+config:
+  nacos:
+    host: ${NACOS_HOST:127.0.0.1}:18848
+    
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: ${config.nacos.host}
+        namespace: live-test
+
+dubbo:
+  protocol:
+    name: dubbo
+    port: 20891
+  application:
+    name: dubbo-live-im-router-provider
+    qos-enable: false
+  registry:
+    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos
+  consumer:
+    cluster: imRouter
