@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 @Slf4j
 @Configuration
@@ -29,14 +28,12 @@ public class WsImServerApplication implements InitializingBean {
     private int port;
     @Value("${im.bind.server.ip}")
     private String imBindServerIp;
-    @Value("${im.bind.server.port}")
-    private Integer imBindServerPort;
+    @Value("${dubbo.protocol.port}")
+    private Integer dubboPort;
     @Resource
     private WsSharkHandler wsSharkHandler;
     @Resource
     private WsImServerCoreHandler wsImServerCoreHandler;
-    @Resource
-    private Environment environment;
 
     public void startApplication() throws InterruptedException {
         // 处理accept事件
@@ -69,12 +66,10 @@ public class WsImServerApplication implements InitializingBean {
             workerGroup.shutdownGracefully();
         }));
 
-//        String dubboIpToRegistry = environment.getProperty("DUBBO_IP_TO_REGISTRY");
-//        String dubboPortToBind = environment.getProperty("DUBBO_PORT_TO_BIND");
-        if (StringUtils.isBlank(imBindServerIp) || imBindServerPort == null) {
+        if (StringUtils.isBlank(imBindServerIp) || dubboPort == null) {
             throw new IllegalArgumentException("The registered IP and port in the startup parameters cannot be empty!");
         }
-        ChannelHandlerContextCache.setServerIpAddress(imBindServerIp + ":" + imBindServerPort);
+        ChannelHandlerContextCache.setServerIpAddress(imBindServerIp + ":" + dubboPort);
 
         ChannelFuture channelFuture = bootstrap.bind(port).sync();
         log.info("IM服务启动成功，监听端口：{}", port);

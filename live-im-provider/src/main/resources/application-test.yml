@@ -1,3 +1,10 @@
+#im:
+#  service-instance: dubbo-live-im-core-server
+#  ws:
+#    port: 19990
+#  tcp:
+#    port: 19991
+#
 #spring:
 #  data:
 #    redis:
@@ -13,16 +20,9 @@
 #dubbo:
 #  protocol:
 #    name: dubbo
-#    port: 20890
+#    port: 29921
 #  application:
 #    name: dubbo-live-im-provider
 #    qos-enable: false
 #  registry:
 #    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
-#
-#im:
-#  service-instance: dubbo-live-im-core-server
-#  ws:
-#    port: 19990
-#  tcp:
-#    port: 19991

@@ -1,3 +1,9 @@
+#config:
+#  nacos:
+#    host: ${NACOS_HOST:127.0.0.1}:18848
+#  rocketmq:
+#    host: ${ROCKETMQ_HOST:127.0.0.1}:9876
+#
 #spring:
 #  cloud:
 #    stream:
@@ -14,11 +20,11 @@
 #          content-type: application/json
 #      rocketmq:
 #        binder:
-#          name-server: ${ROCKETMQ_HOST:192.168.0.100}:9876
+#          name-server: ${config.rocketmq.host}
 #          enable-msg-trace: true
 #  datasource:
 #    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-#    url: jdbc:shardingsphere:nacos:${NACOS_HOST:127.0.0.1}:18848:live-user-provider-sharding-jdbc.yaml?username=nacos&password=nacos&namespace=live-test&group=DEFAULT_GROUP
+#    url: jdbc:shardingsphere:nacos:${config.nacos.host}:live-user-provider-sharding-jdbc.yaml?username=nacos&password=nacos&namespace=live-test&group=DEFAULT_GROUP
 #    hikari:
 #      pool-name: db-user
 #      idle-timeout: 300000
@@ -39,7 +45,7 @@
 #dubbo:
 #  protocol:
 #    name: dubbo
-#    port: 22781
+#    port: 29911
 #    threadpool: fixed
 #    dispatcher: execution
 #    threads: 500
@@ -48,7 +54,7 @@
 #    name: dubbo-live-user-provider
 #    qos-enable: false
 #  registry:
-#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
+#    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos
 #  consumer:
 #    retries: 2    # 默认2
 #    timeout: 5000 # 全局默认超时，控制消费者调用服务时的等待时间
@@ -66,7 +72,3 @@
 #mybatis-plus:
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#
-#customize:
-#  config:
-#    test-refresh: 20

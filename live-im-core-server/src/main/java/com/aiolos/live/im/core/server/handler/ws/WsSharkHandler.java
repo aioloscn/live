@@ -1,6 +1,6 @@
 package com.aiolos.live.im.core.server.handler.ws;
 
-import com.aiolos.live.im.core.server.handler.impl.LoginMsgHandler;
+import com.aiolos.live.im.core.server.handler.processor.LoginMsgHandlerProcessor;
 import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +24,15 @@ import java.util.List;
 @Component
 @ChannelHandler.Sharable
 public class WsSharkHandler extends ChannelInboundHandlerAdapter {
-    
+
+    @Value("${im.ws.web-socket-ip}")
+    private String serverIp;
     @Value("${im.ws.port}")
     private int port;
-    @Value("${config.ws.ip}")
-    private String serverIp;
     @Resource
     private ImTokenRpc imTokenRpc;
-    @Resource
-    private LoginMsgHandler loginMsgHandler;
+    @Autowired
+    private LoginMsgHandlerProcessor loginSuccessHandlerProcessor;
 
     private WebSocketServerHandshaker webSocketServerHandshaker;
 
@@ -124,7 +125,7 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
         ChannelFuture channelFuture = webSocketServerHandshaker.handshake(ctx.channel(), request);
         // 首次握手建立ws连接后返回消息给客户端
         if (channelFuture.isSuccess()) {
-            loginMsgHandler.loginSuccessHandler(ctx, userId, appId, roomId);
+            loginSuccessHandlerProcessor.loginSuccessHandler(ctx, userId, appId, roomId);
             log.info("[WebSocketSharkHandler] channel is connect! user is {}", userId);
         }
     }

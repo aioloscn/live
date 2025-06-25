@@ -1,17 +1,17 @@
-package com.aiolos.live.im.core.server.handler.impl;
+package com.aiolos.live.im.core.server.handler.processor;
 
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.common.message.ImOnlineMessage;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.SimpleHandler;
+import com.aiolos.live.im.core.server.handler.coreflow.AbstractImHandlerProcessor;
 import com.aiolos.live.im.core.server.mq.producer.ImMsgProducer;
+import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.aiolos.live.im.interfaces.constants.AppIdEnum;
 import com.aiolos.live.im.interfaces.constants.ImConstants;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
-import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class LoginMsgHandler implements SimpleHandler {
+public class LoginMsgHandlerProcessor extends AbstractImHandlerProcessor {
 
     @DubboReference
     private ImTokenRpc imTokenRpc;
@@ -39,25 +39,30 @@ public class LoginMsgHandler implements SimpleHandler {
     private ImMsgProducer imMsgProducer;
     
     @Override
+    public ImMsgCodeEnum getEnum() {
+        return ImMsgCodeEnum.IM_LOGIN_MSG;
+    }
+
+    @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
         if (ImContextUtil.getUserId(ctx) != null) {
             return;
         }
-        
+
         byte[] body = msg.getBody();
         if (body == null || body.length == 0) {
             ctx.close();
             throw new IllegalArgumentException("msg body data missing");
         }
-        
+
         ImMsgBody imMsgBody = JSON.parseObject(body, ImMsgBody.class);
         int appId = imMsgBody.getAppId();
         String token = imMsgBody.getToken();
         if (StringUtils.isBlank(token) || appId < 10000) {
             ctx.close();
-            throw new IllegalArgumentException("msg token or appId is error"); 
+            throw new IllegalArgumentException("msg token or appId is error");
         }
-        
+
         Long userId = imTokenRpc.getUserIdByToken(token);
         if (userId != null && userId.equals(imMsgBody.getUserId())) {
 

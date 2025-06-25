@@ -4,11 +4,13 @@ import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuil
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.ImHandlerFactory;
+import com.aiolos.live.im.core.server.handler.coreflow.ImHandlerManager;
+import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +21,8 @@ import org.springframework.stereotype.Service;
 @ChannelHandler.Sharable    // 需确保线程安全
 public class TcpImServerCoreHandler extends SimpleChannelInboundHandler {
 
-    @Resource
-    private ImHandlerFactory imHandlerFactory;
+    @Autowired
+    private ImHandlerManager imHandlerManager;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -31,7 +33,7 @@ public class TcpImServerCoreHandler extends SimpleChannelInboundHandler {
         if (!(o instanceof ImMsg msg)) {
             throw new IllegalArgumentException("error msg, msg is: " + o);
         }
-        imHandlerFactory.doMsgHandler(ctx, msg);
+        imHandlerManager.getProcessor(ImMsgCodeEnum.getEnumByCode(msg.getCode())).handle(ctx, msg);
     }
 
     /**

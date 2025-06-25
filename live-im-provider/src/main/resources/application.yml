@@ -1,3 +1,6 @@
+server:
+  port: 9921
+
 spring:
   profiles:
     active: dev

@@ -1,11 +1,11 @@
-package com.aiolos.live.im.core.server.handler.impl;
+package com.aiolos.live.im.core.server.handler.processor;
 
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.common.message.ImOfflineMessage;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.SimpleHandler;
+import com.aiolos.live.im.core.server.handler.coreflow.AbstractImHandlerProcessor;
 import com.aiolos.live.im.core.server.mq.producer.ImMsgProducer;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class LogoutMsgHandler implements SimpleHandler {
+public class LogoutMsgHandlerProcessor extends AbstractImHandlerProcessor {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -29,6 +29,11 @@ public class LogoutMsgHandler implements SimpleHandler {
     private ImMsgProducer imMsgProducer;
     
     @Override
+    public ImMsgCodeEnum getEnum() {
+        return ImMsgCodeEnum.IM_LOGOUT_MSG;
+    }
+
+    @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
         Long userId = ImContextUtil.getUserId(ctx);
         Integer appId = ImContextUtil.getAppId(ctx);
@@ -36,7 +41,7 @@ public class LogoutMsgHandler implements SimpleHandler {
             ctx.close();
             throw new IllegalArgumentException("attr data missing");
         }
-        
+
         // 将im消息回写给客户端
         this.logoutHandler(ctx, userId, appId);
         this.sendOfflineMQ(ctx, userId, appId);

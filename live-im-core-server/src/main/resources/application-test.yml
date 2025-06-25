@@ -1,3 +1,19 @@
+#config:
+#  nacos:
+#    host: ${NACOS_HOST:127.0.0.1}:18848
+#  rocketmq:
+#    host: ${ROCKETMQ_HOST:192.168.0.100}:9876
+#
+#im:
+#  bind:
+#    server:
+#      ip: 192.168.0.100 # 用户登录后保存用户和所在服务器的关系，用于转发消息时确定接收方的节点，不能在代码里获取LocalHost，因为部署在容器里获取不到真实ip
+#  ws:
+#    web-socket-ip: live.aiolos.com  # 接收im消息发服务ip或可解析域名
+#    port: 19990   # im服务端监听的端口
+#  tcp:
+#    port: 19991
+#
 #spring:
 #  cloud:
 #    stream:
@@ -22,7 +38,7 @@
 #          content-type: application/json
 #      rocketmq:
 #        binder:
-#          name-server: ${ROCKETMQ_HOST:192.168.0.100}:9876
+#          name-server: ${config.rocketmq.host}
 #          enable-msg-trace: true
 #  data:
 #    redis:
@@ -38,19 +54,9 @@
 #dubbo:
 #  protocol:
 #    name: dubbo
-#    port: 20889
+#    port: 29961
 #  application:
 #    name: dubbo-live-im-core-server
 #    qos-enable: false
 #  registry:
-#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
-#
-#im:
-#  bind:
-#    server:
-#      ip: 192.168.0.100 # 用户登录后保存用户和所在服务器的关系，用于转发消息时确定接收方的节点
-#      port: 20889
-#  ws:
-#    port: 19990
-#  tcp:
-#    port: 19991
+#    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos

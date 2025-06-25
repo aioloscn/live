@@ -1,5 +1,5 @@
 server:
-  port: 8808
+  port: 9901
 
 spring:
   profiles:

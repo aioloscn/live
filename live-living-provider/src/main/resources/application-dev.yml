@@ -1,8 +1,6 @@
 config:
   nacos:
     host: ${NACOS_HOST:127.0.0.1}:18848
-  rocketmq:
-    host: ${ROCKETMQ_HOST:127.0.0.1}:9876
 
 spring:
   cloud:

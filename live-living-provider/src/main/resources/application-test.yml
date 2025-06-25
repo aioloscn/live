@@ -4,6 +4,10 @@
 #  rocketmq:
 #    host: ${ROCKETMQ_HOST:127.0.0.1}:9876
 #
+#task:
+#  refresh-living-room:
+#    ip: 192.168.0.100
+#
 #spring:
 #  cloud:
 #    stream:
@@ -20,7 +24,7 @@
 #          content-type: application/json
 #      rocketmq:
 #        binder:
-#          name-server: ${ROCKETMQ_HOST:192.168.0.100}:9876
+#          name-server: ${config.rocketmq.host}
 #          enable-msg-trace: true
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -41,7 +45,7 @@
 #dubbo:
 #  protocol:
 #    name: dubbo
-#    port: 22882
+#    port: 29981
 #  application:
 #    name: dubbo-live-living-provider
 #    qos-enable: false
@@ -49,7 +53,3 @@
 #    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos
 #  consumer:
 #    check: false
-#    
-#task:
-#  refresh-living-room:
-#    ip: 192.168.0.100

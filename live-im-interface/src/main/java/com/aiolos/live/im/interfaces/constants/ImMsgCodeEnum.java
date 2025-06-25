@@ -3,6 +3,9 @@ package com.aiolos.live.im.interfaces.constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 @Getter
 @AllArgsConstructor
 public enum ImMsgCodeEnum {
@@ -16,4 +19,9 @@ public enum ImMsgCodeEnum {
     
     private int code;
     private String desc;
+    
+    public static ImMsgCodeEnum getEnumByCode(int code) {
+        Optional<ImMsgCodeEnum> optional = Arrays.asList(values()).stream().filter(v -> v.getCode() == code).findAny();
+        return optional.orElse(null);
+    }
 }

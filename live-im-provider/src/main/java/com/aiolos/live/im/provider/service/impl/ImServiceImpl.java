@@ -46,7 +46,7 @@ public class ImServiceImpl implements ImService {
         if (instances.isEmpty()) {
             throw new RuntimeException("No IM core service instance available!");
         }
-        Collections.shuffle(instances); // 简单的随机负载均衡
+        Collections.shuffle(instances); // 这个服务里不知道有多少个dubbo-live-im-core-server实例，所以这里随机取一个给当前用户
         ServiceInstance instance = instances.get(0);
         vo.setWsImServerAddress(instance.getHost() + ":" + wsPort); // 前端去拼接 ws:// 地址
         vo.setTcpImServerAddress(instance.getHost() + ":" + tcpPort);

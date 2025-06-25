@@ -1,26 +1,24 @@
-package com.aiolos.live.im.core.server.handler.impl;
+package com.aiolos.live.im.core.server.handler.processor;
 
 import com.aiolos.live.common.keys.builder.ImCoreServerRedisKeyBuilder;
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.SimpleHandler;
+import com.aiolos.live.im.core.server.handler.coreflow.AbstractImHandlerProcessor;
 import com.aiolos.live.im.interfaces.constants.ImConstants;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Component
-public class HeartbeatMsgHandler implements SimpleHandler {
+public class HeartbeatMsgHandlerProcessor extends AbstractImHandlerProcessor {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -32,6 +30,11 @@ public class HeartbeatMsgHandler implements SimpleHandler {
     private ImCoreServerCommonRedisKeyBuilder imCoreServerCommonRedisKeyBuilder;
     
     @Override
+    public ImMsgCodeEnum getEnum() {
+        return ImMsgCodeEnum.IM_HEARTBEAT_MSG;
+    }
+
+    @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
         // 心跳包基本检测
         Long userId = ImContextUtil.getUserId(ctx);
@@ -40,7 +43,7 @@ public class HeartbeatMsgHandler implements SimpleHandler {
             ctx.close();
             throw new IllegalArgumentException("attr data missing");
         }
-        
+
         // redis存储心跳记录
         String heartbeatZSetKey = imCoreServerRedisKeyBuilder.buildImOnlineZSetKey(userId, appId);
         this.recordOnlineTime(userId, heartbeatZSetKey);

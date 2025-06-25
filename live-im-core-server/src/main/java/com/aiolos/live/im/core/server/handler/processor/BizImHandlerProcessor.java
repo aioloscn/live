@@ -1,21 +1,25 @@
-package com.aiolos.live.im.core.server.handler.impl;
+package com.aiolos.live.im.core.server.handler.processor;
 
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.SimpleHandler;
+import com.aiolos.live.im.core.server.handler.coreflow.AbstractImHandlerProcessor;
 import com.aiolos.live.im.core.server.mq.producer.ImMsgProducer;
+import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
-public class BizMsgHandler implements SimpleHandler {
+public class BizImHandlerProcessor extends AbstractImHandlerProcessor {
 
     @Autowired
     private ImMsgProducer imMsgProducer;
     
+    @Override
+    public ImMsgCodeEnum getEnum() {
+        return ImMsgCodeEnum.IM_BIZ_MSG;
+    }
+
     @Override
     public void handle(ChannelHandlerContext ctx, ImMsg msg) {
         Long userId = ImContextUtil.getUserId(ctx);
@@ -30,7 +34,7 @@ public class BizMsgHandler implements SimpleHandler {
             ctx.close();
             throw new IllegalArgumentException("msg body data missing");
         }
-        
+
         imMsgProducer.sendBizMsg(body);
     }
 }

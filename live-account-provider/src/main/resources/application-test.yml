@@ -1,3 +1,9 @@
+#config:
+#  service:
+#    id: 1001  # 服务器唯一标识
+#  nacos:
+#    host: ${NACOS_HOST:127.0.0.1}:18848
+#
 #spring:
 #  data:
 #    redis:
@@ -13,9 +19,9 @@
 #dubbo:
 #  protocol:
 #    name: dubbo
-#    port: 20892
+#    port: 29931
 #  application:
 #    name: dubbo-live-account-provider
 #    qos-enable: false
 #  registry:
-#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=live-test&username=nacos&password=nacos
+#    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos

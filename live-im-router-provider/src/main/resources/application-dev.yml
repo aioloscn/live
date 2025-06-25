@@ -14,7 +14,7 @@ spring:
 dubbo:
   protocol:
     name: dubbo
-    port: 20891
+    port: 29971
   application:
     name: dubbo-live-im-router-provider
     qos-enable: false

@@ -4,7 +4,8 @@ import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuil
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
-import com.aiolos.live.im.core.server.handler.ImHandlerFactory;
+import com.aiolos.live.im.core.server.handler.coreflow.ImHandlerManager;
+import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.ChannelHandler;
@@ -14,6 +15,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,8 @@ import org.springframework.stereotype.Service;
 @ChannelHandler.Sharable
 public class WsImServerCoreHandler extends SimpleChannelInboundHandler {
 
-
-    @Resource
-    private ImHandlerFactory imHandlerFactory;
+    @Autowired
+    private ImHandlerManager imHandlerManager;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -51,7 +52,7 @@ public class WsImServerCoreHandler extends SimpleChannelInboundHandler {
             imMsg.setCode(jsonObject.getInteger("code"));
             imMsg.setLen(jsonObject.getInteger("len"));
             imMsg.setBody(jsonObject.getString("body").getBytes());
-            imHandlerFactory.doMsgHandler(ctx, imMsg);
+            imHandlerManager.getProcessor(ImMsgCodeEnum.getEnumByCode(imMsg.getCode())).handle(ctx, imMsg);
         } catch (Exception e) {
             log.error("[WebsocketCoreHandler]  wsMsgHandler , {}", e.getMessage(), e);
         }
