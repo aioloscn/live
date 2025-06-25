@@ -11,5 +11,5 @@ public class StreamingDTO implements Serializable {
     private Long roomId;
     private String roomName;
     private Integer type;
-    private String covertImg;
+    private String cover;
 }

@@ -2,11 +2,11 @@ package com.aiolos.live.im.provider.service.impl;
 
 import com.aiolos.common.model.ContextInfo;
 import com.aiolos.live.im.interfaces.constants.AppIdEnum;
-import com.aiolos.live.im.interfaces.ImTokenRpc;
 import com.aiolos.live.im.provider.service.ImService;
+import com.aiolos.live.im.provider.service.ImTokenService;
 import com.aiolos.live.im.provider.vo.ImConfigVO;
 import jakarta.annotation.Resource;
-import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -18,8 +18,8 @@ import java.util.List;
 @Service
 public class ImServiceImpl implements ImService {
 
-    @DubboReference
-    private ImTokenRpc imTokenRpc;
+    @Autowired
+    private ImTokenService imTokenService;
     @Resource
     private DiscoveryClient discoveryClient;
     
@@ -34,7 +34,7 @@ public class ImServiceImpl implements ImService {
     public ImConfigVO getImConfig() {
         Long userId = ContextInfo.getUserId();
         if (userId == null) return null;
-        String token = imTokenRpc.createImLoginToken(userId, AppIdEnum.LIVE_APP_ID.getCode());
+        String token = imTokenService.createImLoginToken(userId, AppIdEnum.LIVE_APP_ID.getCode());
         ImConfigVO vo = new ImConfigVO();
         vo.setToken(token);
         buildImServerAddress(vo);

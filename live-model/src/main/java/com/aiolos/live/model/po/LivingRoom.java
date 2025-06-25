@@ -54,8 +54,8 @@ public class LivingRoom implements Serializable {
     /**
      * 直播间封面
      */
-    @TableField("covert_img")
-    private String covertImg;
+    @TableField("cover")
+    private String cover;
 
     /**
      * 观看数量
@@ -86,7 +86,7 @@ public class LivingRoom implements Serializable {
 
     public static final String ROOM_NAME = "room_name";
 
-    public static final String COVERT_IMG = "covert_img";
+    public static final String COVER = "cover";
 
     public static final String WATCH_COUNT = "watch_count";
 

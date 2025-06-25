@@ -26,7 +26,7 @@ public class ApiLivingRoomVO {
     private String roomName;
 
     @Schema(description = "封面图片")
-    private String covertImg;
+    private String cover;
 
     @Schema(description = "观看数")
     private Integer watchCount;

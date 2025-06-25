@@ -29,7 +29,7 @@ public class HomeLivingRoomServiceImpl implements HomeLivingRoomService {
         dto.setStreamerId(ContextInfo.getUserId());
         dto.setRoomName("测试直播间");
         dto.setType(type);
-        dto.setCovertImg(ContextInfo.getAvatar());
+        dto.setCover(ContextInfo.getAvatar());
         return livingRoomRpc.startStreaming(dto);
     }
 
