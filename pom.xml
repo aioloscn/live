@@ -32,6 +32,8 @@
     <module>live-living-provider</module>
     <module>live-account-interface</module>
     <module>live-account-provider</module>
+    <module>live-gift-interface</module>
+    <module>live-gift-provider</module>
   </modules>
 
   <properties>
@@ -63,6 +65,8 @@
     <live-im-router-provider.version>1.0-SNAPSHOT</live-im-router-provider.version>
     <live-living-interface.version>1.0-SNAPSHOT</live-living-interface.version>
     <live-living-provider.version>1.0-SNAPSHOT</live-living-provider.version>
+    <live-gift-interface.version>1.0-SNAPSHOT</live-gift-interface.version>
+    <live-gift-provider.version>1.0-SNAPSHOT</live-gift-provider.version>
   </properties>
 
   <!-- 用parent引入，子模块自动继承资源，插件自动生效 -->
@@ -143,6 +147,11 @@
         <groupId>com.aiolos</groupId>
         <artifactId>live-living-interface</artifactId>
         <version>${live-living-interface.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aiolos</groupId>
+        <artifactId>live-gift-interface</artifactId>
+        <version>${live-gift-interface.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -60,4 +60,10 @@ public class CommonRedisAutoConfiguration {
     public LivingRoomRedisKeyBuilder livingRoomRedisKeyBuilder(RedisKeyProperties properties) {
         return new LivingRoomRedisKeyBuilder(properties);
     }
+
+    @Bean
+    @Conditional(RedisKeyLoadMatch.class)
+    public GiftProviderRedisKeyBuilder giftProviderRedisKeyBuilder(RedisKeyProperties properties) {
+        return new GiftProviderRedisKeyBuilder(properties);
+    }
 }

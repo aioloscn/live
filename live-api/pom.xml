@@ -39,6 +39,10 @@
             <groupId>com.aiolos</groupId>
             <artifactId>live-im-interface</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
+            <artifactId>live-gift-interface</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
