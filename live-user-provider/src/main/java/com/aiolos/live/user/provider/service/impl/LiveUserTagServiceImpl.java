@@ -12,12 +12,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -36,48 +36,76 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
     @Override
     public boolean setTag(Long userId, UserTagEnum userTagEnum) {
 
-        String setNXKey = userProviderCommonRedisKeyBuilder.buildUserTagLockKey(userId);
+        // 基于redis分布式锁设置用户标签，redisTemplate.delete(setNXKey);无法验证锁持有者会误删
+        /*String setNXKey = userProviderCommonRedisKeyBuilder.buildUserTagLockKey(userId);
         String setNXResult = redisTemplate.execute((RedisCallback<String>) connection -> {
+            // 获取序列化器
             RedisSerializer keySerializer = redisTemplate.getKeySerializer();
             RedisSerializer valueSerializer = redisTemplate.getValueSerializer();
             return (String) connection.execute("set",
-                    keySerializer.serialize(setNXKey),
-                    valueSerializer.serialize("-1"),
-                    "NX".getBytes(StandardCharsets.UTF_8),
-                    "EX".getBytes(StandardCharsets.UTF_8),
-                    "3".getBytes(StandardCharsets.UTF_8));
+                    keySerializer.serialize(setNXKey),      // key
+                    valueSerializer.serialize("-1"),      // value
+                    "NX".getBytes(StandardCharsets.UTF_8),  // 仅当key不存在时才设置
+                    "EX".getBytes(StandardCharsets.UTF_8),  // 设置过期时间，单位秒
+                    "3".getBytes(StandardCharsets.UTF_8));  // 过期时间3秒
         });
         if (!"ok".equalsIgnoreCase(setNXResult)) {
             log.error("{}获取redis锁失败", Thread.currentThread().getName());
             return false;
-        }
-        log.info("{}获取redis锁成功", Thread.currentThread().getName());
+        }*/
 
-        boolean updated = true;
-        UserTag userTag = getUserTagFromRedis(userId);
-        if (userTag != null) {
-            if (!checkTag(userTag, userTagEnum)) {
-                userTag.setTagInfo01(userTag.getTagInfo01() | userTagEnum.getTag());
-                updated = userTagService.update(userTag, Wrappers.lambdaUpdate(UserTag.class).eq(UserTag::getUserId, userId));
+        String key = userProviderCommonRedisKeyBuilder.buildUserTagLockKey(userId);
+        String value = UUID.randomUUID().toString();
+        String lockScript = 
+                "if redis.call('set', KEYS[1], ARGV[1], 'NX', 'EX', ARGV[2]) then " +
+                "   return true" +    // 加锁成功
+                "else " +
+                "   local currentValue = redis.call('get', KEYS[1]) " + // 这个脚本没有重复使用所以不会执行到这里
+                "   if currentValue == ARGV[1] then " +
+                "       redis.call('expire', KEYS[1], ARGV[2])" +   // 锁重入/续期
+                "       return true " +
+                "   end " +
+                "end " +
+                "return false"; // 加锁失败
+        Boolean locked = redisTemplate.execute(new DefaultRedisScript<>(lockScript, Boolean.class), Collections.singletonList(key), value, "3");// 3秒过期
+        log.info("{}获取redis锁结果: {}", Thread.currentThread().getName(), locked);
 
-                redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId));
-                log.info("修改用户{}的标签{}, result: {}", userId, userTagEnum.getDesc(), updated);
+        boolean updated = false;
+        if (Boolean.TRUE.equals(locked)) {
+            try {
+                UserTag userTag = getUserTagFromRedis(userId);
+                if (userTag != null) {
+                    if (!checkTag(userTag, userTagEnum)) {
+                        userTag.setTagInfo01(userTag.getTagInfo01() | userTagEnum.getTag());
+                        updated = userTagService.update(userTag, Wrappers.lambdaUpdate(UserTag.class).eq(UserTag::getUserId, userId));
+
+                        redisTemplate.delete(userProviderCommonRedisKeyBuilder.buildUserTagKey(userId));
+                        log.info("修改用户{}的标签{}, result: {}", userId, userTagEnum.getDesc(), updated);
+                    }
+                } else {
+                    userTag = new UserTag();
+                    userTag.setUserId(userId);
+                    userTag.setTagInfo01(userTagEnum.getTag());
+                    updated = userTagService.save(userTag);
+                    log.info("保存用户{}的标签{}, result: {}", userId, userTagEnum.getDesc(), updated);
+                }
+            } finally {
+                String unlockScript = 
+                        "if redis.call('get', KEYS[1]) == ARGV[1] then " +
+                        "   return redis.call('del', KEYS[1]) " + 
+                        "else " +
+                        "   return 0 " +
+                        "end";
+                redisTemplate.execute(new DefaultRedisScript<>(unlockScript, Long.class), Collections.singletonList(key), value);
             }
-        } else {
-            userTag = new UserTag();
-            userTag.setUserId(userId);
-            userTag.setTagInfo01(userTagEnum.getTag());
-            updated = userTagService.save(userTag);
-            log.info("保存用户{}的标签{}, result: {}", userId, userTagEnum.getDesc(), updated);
         }
-        redisTemplate.delete(setNXKey);
         return updated;
     }
 
     @Override
     public boolean cancelTag(Long userId, UserTagEnum userTagEnum) {
         
-        boolean updated = true;
+        boolean updated = false;
         UserTag userTag = getUserTagFromRedis(userId);
         if (userTag != null) {
             if (checkTag(userTag, userTagEnum)) {

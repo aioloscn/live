@@ -57,8 +57,8 @@ public class LivingRoomTask {
                         "end";
                 redisTemplate.execute(
                         new DefaultRedisScript<>(script, Long.class),
-                        Collections.singletonList(lockKey),
-                        dubboIpToRegistry
+                        Collections.singletonList(lockKey), // 锁key，对应KEYS[1]
+                        dubboIpToRegistry   // 可变参数，对应ARGV[1]，保证是同一个锁持有者
                 );
             }
         }
