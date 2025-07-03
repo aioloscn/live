@@ -41,6 +41,8 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         List<String> whitelistUrls = gatewayApplicationProperties.getUrls();
+        List<String> anonymousUrls = gatewayApplicationProperties.getAnonymousUrls();
+
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
         if (path.contains("api-docs")) {
@@ -51,7 +53,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         }
 
         for (String whitelistUrl : whitelistUrls) {
-            if (path.startsWith(whitelistUrl)) {
+            if (path.contains(whitelistUrl)) {
                 // 不需要token校验，放行到下游服务
                 return chain.filter(exchange);
             }
@@ -78,12 +80,17 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
             builder.header(GatewayHeaderEnum.USER_INFO_JSON.getHeaderName(), encodedJson);
             builder.header(GatewayHeaderEnum.IS_ANONYMOUS.getHeaderName(), "false");
         } else {
-            // 匿名用户处理
-            String deviceId = resolveDeviceId(exchange);
-            Long anonymousId = accountTokenRpc.getOrCreateAnonymousId(deviceId);
-            builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), anonymousId.toString());
-            builder.header(GatewayHeaderEnum.DEVICE_ID.getHeaderName(), deviceId);
-            builder.header(GatewayHeaderEnum.IS_ANONYMOUS.getHeaderName(), "true");
+
+            if (anonymousUrls.stream().filter(path::contains).findAny().isPresent()) {
+                // 匿名用户处理
+                String deviceId = resolveDeviceId(exchange);
+                Long anonymousId = accountTokenRpc.getOrCreateAnonymousId(deviceId);
+                builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getHeaderName(), anonymousId.toString());
+                builder.header(GatewayHeaderEnum.DEVICE_ID.getHeaderName(), deviceId);
+                builder.header(GatewayHeaderEnum.IS_ANONYMOUS.getHeaderName(), "true");
+            } else {
+                return Mono.empty();
+            }
         }
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
@@ -128,6 +135,6 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE + 1;
+        return Ordered.HIGHEST_PRECEDENCE + 2;
     }
 }

@@ -1,5 +1,5 @@
 services:
-  live-gateway:
+  live-gateway-1:
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -12,4 +12,19 @@ services:
     ports:
       - '8700:8700'
     volumes:
-      - D:\tmp\logs\live-gateway:/tmp/logs/live-gateway
+      - D:\tmp\logs\live-gateway-1:/tmp/logs/live-gateway
+  
+#  live-gateway-2:
+#    build:
+#      context: ..
+#      dockerfile: docker/Dockerfile
+#    image: 'live-gateway-docker:latest'
+#    environment:
+#      - server.port=8701
+#      - spring.cloud.nacos.discovery.ip=${DEV_HOST} # 不同物理机必须明确指定IP
+#      - NACOS_HOST=${DEV_HOST}
+#      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms256m -Xmx256m -Xmn128m -Xss256k
+#    ports:
+#      - '8701:8701'
+#    volumes:
+#      - D:\tmp\logs\live-gateway-2:/tmp/logs/live-gateway
