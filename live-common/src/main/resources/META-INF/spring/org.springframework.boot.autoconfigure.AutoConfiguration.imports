@@ -1,1 +1,2 @@
+# 不需要，其他模块已经能根据com.aiolos扫描到
 com.aiolos.live.common.config.CommonRedisAutoConfiguration

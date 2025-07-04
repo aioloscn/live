@@ -1,5 +1,6 @@
 package com.aiolos.live.user.provider.nacos;
 
+import com.aiolos.live.common.utils.UrlUtil;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
@@ -7,6 +8,7 @@ import com.alibaba.nacos.api.exception.NacosException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shardingsphere.driver.jdbc.core.driver.ShardingSphereDriverURLProvider;
 
+import java.util.Map;
 import java.util.Properties;
 
 public class NacosDriverURLProvider implements ShardingSphereDriverURLProvider {
@@ -36,11 +38,11 @@ public class NacosDriverURLProvider implements ShardingSphereDriverURLProvider {
         String dataId = jdbcUrlArr[2];
 
         String nacosConfig = split[1];
-        String[] nacosConfigArr = nacosConfig.split("&");
-        String username = nacosConfigArr[0].split("=")[1];
-        String password = nacosConfigArr[1].split("=")[1];
-        String namespace = nacosConfigArr[2].split("=")[1];
-        String group = nacosConfigArr[3].split("=")[1];
+        Map<String, String> paramMap = UrlUtil.urlParse(nacosConfig);
+        String username = paramMap.get("username");
+        String password = paramMap.get("password");
+        String namespace = paramMap.get("namespace");
+        String group = paramMap.get("group");
 
         Properties properties = new Properties();
         properties.setProperty(PropertyKeyConst.SERVER_ADDR, serverAddr);
