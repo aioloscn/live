@@ -36,7 +36,7 @@ public class RouterHandlerServiceImpl implements RouterHandlerService {
         ChannelHandlerContext ctx = ChannelHandlerContextCache.get(userId);
         if (ctx != null) {
             if (StringUtils.isBlank(imMsgBody.getMsgId())) {
-                imMsgBody.setMsgId(UUID.randomUUID().toString());
+                imMsgBody.setMsgId(UUID.randomUUID().toString().replace("-", ""));
             }
             // 回写给客户端
             ctx.writeAndFlush(ImMsg.build(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBody)));

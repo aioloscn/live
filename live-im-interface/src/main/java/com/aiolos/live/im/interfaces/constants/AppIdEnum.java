@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum AppIdEnum {
     
     LIVE_APP_ID(10001, "直播业务"),
+    CINEMA_APP_ID(10002, "影院业务"),
     ;
     
     private Integer code;

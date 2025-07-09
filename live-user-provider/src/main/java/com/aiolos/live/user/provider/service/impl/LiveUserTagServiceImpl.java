@@ -55,7 +55,7 @@ public class LiveUserTagServiceImpl implements LiveUserTagService {
         }*/
 
         String key = userProviderCommonRedisKeyBuilder.buildUserTagLockKey(userId);
-        String value = UUID.randomUUID().toString();
+        String value = UUID.randomUUID().toString().replace("-", "");
         String lockScript = 
                 "if redis.call('set', KEYS[1], ARGV[1], 'NX', 'EX', ARGV[2]) then " +
                 "   return true" +    // 加锁成功

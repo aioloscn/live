@@ -119,9 +119,9 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         }
 
         if (StringUtils.isBlank(deviceId)) {
-            deviceId = UUID.randomUUID().toString();
+            deviceId = UUID.randomUUID().toString().replace("-", "");
             ResponseCookie deviceCookie = ResponseCookie.from("device-id", deviceId)
-                    .maxAge(Duration.ofDays(7))
+                    .maxAge(Duration.ofDays(7)) // 如果有未登录加购功能，可以设置365
                     .httpOnly(true)
                     .secure(activeProfile.equalsIgnoreCase("prod")) // 仅https传输
                     .domain("live.aiolos.com")

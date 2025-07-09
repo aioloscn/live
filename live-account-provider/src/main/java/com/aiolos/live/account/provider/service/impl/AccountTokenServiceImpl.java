@@ -24,7 +24,7 @@ public class AccountTokenServiceImpl implements AccountTokenService {
 
     @Override
     public String createToken(Long userId) {
-        String token = UUID.randomUUID().toString();
+        String token = UUID.randomUUID().toString().replace("-", "");
         redisTemplate.opsForValue().set(userProviderCommonRedisKeyBuilder.buildUserTokenKey(token), userId, 7, TimeUnit.DAYS);
         return token;
     }
