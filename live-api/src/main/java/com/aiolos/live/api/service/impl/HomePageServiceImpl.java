@@ -1,11 +1,11 @@
 package com.aiolos.live.api.service.impl;
 
+import com.aiolos.badger.enums.UserTagEnum;
+import com.aiolos.badger.user.api.UserApi;
+import com.aiolos.badger.user.api.UserTagApi;
+import com.aiolos.badger.user.dto.UserDTO;
 import com.aiolos.live.api.service.HomePageService;
 import com.aiolos.live.api.vo.HomePageVO;
-import com.aiolos.live.enums.UserTagEnum;
-import com.aiolos.live.user.dto.UserDTO;
-import com.aiolos.live.user.interfaces.UserRpc;
-import com.aiolos.live.user.interfaces.UserTagRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
 public class HomePageServiceImpl implements HomePageService {
 
     @DubboReference
-    private UserRpc userRpc;
+    private UserApi userApi;
     @DubboReference
-    private UserTagRpc userTagRpc;
+    private UserTagApi userTagApi;
     
     @Override
     public HomePageVO initPage(Long userId) {
-        UserDTO userDTO = userRpc.getUserById(userId);
+        UserDTO userDTO = userApi.getUserById(userId);
         HomePageVO vo = new HomePageVO();
         vo.setUserId(userId);
         if (userDTO != null) {
             vo.setNickName(userDTO.getNickName());
             vo.setAvatar(userDTO.getAvatar());
-            vo.setShowStartLivingBtn(userTagRpc.checkTag(userId, UserTagEnum.IS_LIVE_STREAMER));
+            vo.setShowStartLivingBtn(userTagApi.checkTag(userId, UserTagEnum.IS_LIVE_STREAMER));
         }
         return vo;
     }
