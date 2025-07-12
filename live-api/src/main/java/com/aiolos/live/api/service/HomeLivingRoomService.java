@@ -3,8 +3,8 @@ package com.aiolos.live.api.service;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.vo.ApiLivingRoomVO;
 import com.aiolos.live.api.vo.LivingRoomListVO;
-import com.aiolos.live.common.wrapper.PageModel;
-import com.aiolos.live.common.wrapper.PageResult;
+import com.aiolos.common.wrapper.PageModel;
+import com.aiolos.common.wrapper.PageResult;
 
 public interface HomeLivingRoomService {
 

@@ -2,9 +2,9 @@ package com.aiolos.live.gift.provider.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.common.enums.base.BoolEnum;
-import com.aiolos.common.utils.ConvertBeanUtil;
+import com.aiolos.common.util.ConvertBeanUtil;
 import com.aiolos.live.common.keys.builder.GiftProviderRedisKeyBuilder;
-import com.aiolos.live.gift.interfaces.dto.GiftConfigDTO;
+import com.aiolos.live.gift.api.dto.GiftConfigDTO;
 import com.aiolos.live.gift.provider.service.GiftConfigService;
 import com.aiolos.live.model.po.LivingGiftConfig;
 import com.aiolos.live.service.LivingGiftConfigService;

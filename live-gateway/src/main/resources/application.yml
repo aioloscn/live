@@ -1,8 +1,0 @@
-server:
-  port: 8700
-
-spring:
-  profiles:
-    active: dev
-  application:
-    name: live-gateway

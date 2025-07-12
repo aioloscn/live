@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>com.aiolos</groupId>
-            <artifactId>live-dubbo-common</artifactId>
+            <artifactId>common-dubbo</artifactId>
         </dependency>
         
         <dependency>

@@ -1,7 +1,7 @@
 package com.aiolos.live.gift.provider.service.impl;
 
-import com.aiolos.common.utils.ConvertBeanUtil;
-import com.aiolos.live.gift.interfaces.dto.GIftRecordDTO;
+import com.aiolos.common.util.ConvertBeanUtil;
+import com.aiolos.live.gift.api.dto.GIftRecordDTO;
 import com.aiolos.live.gift.provider.service.GiftRecordService;
 import com.aiolos.live.model.po.LivingGiftRecord;
 import com.aiolos.live.service.LivingGiftRecordService;

@@ -12,6 +12,10 @@
     <dependencies>
         <dependency>
             <groupId>com.aiolos</groupId>
+            <artifactId>common-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
             <artifactId>live-common</artifactId>
         </dependency>
     </dependencies>

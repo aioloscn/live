@@ -1,7 +1,7 @@
 package com.aiolos.live.msg.provider.service.impl;
 
-import com.aiolos.common.enums.errors.ErrorEnum;
-import com.aiolos.common.exception.utils.ExceptionUtil;
+import com.aiolos.common.enums.error.ErrorEnum;
+import com.aiolos.common.exception.util.ExceptionUtil;
 import com.aiolos.common.model.response.CommonResponse;
 import com.aiolos.live.common.keys.builder.MsgProviderRedisKeyBuilder;
 import com.aiolos.live.common.keys.builder.common.MsgProviderCommonRedisKeyBuilder;

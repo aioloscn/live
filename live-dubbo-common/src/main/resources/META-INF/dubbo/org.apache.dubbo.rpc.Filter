@@ -1,1 +1,0 @@
-customExceptionFilter=com.aiolos.live.dubbo.common.filter.CustomExceptionFilter

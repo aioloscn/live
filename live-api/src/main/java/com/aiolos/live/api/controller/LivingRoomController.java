@@ -1,14 +1,14 @@
 package com.aiolos.live.api.controller;
 
-import com.aiolos.common.enums.errors.ErrorEnum;
-import com.aiolos.common.exception.utils.ExceptionUtil;
+import com.aiolos.common.enums.error.ErrorEnum;
+import com.aiolos.common.exception.util.ExceptionUtil;
 import com.aiolos.common.model.ContextInfo;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.service.HomeLivingRoomService;
 import com.aiolos.live.api.vo.LivingRoomListVO;
 import com.aiolos.live.api.vo.ApiLivingRoomVO;
-import com.aiolos.live.common.wrapper.PageModel;
-import com.aiolos.live.common.wrapper.PageResult;
+import com.aiolos.common.wrapper.PageModel;
+import com.aiolos.common.wrapper.PageResult;
 import com.aiolos.live.enums.exceptions.LivingRoomExceptionEnum;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

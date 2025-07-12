@@ -1,8 +1,8 @@
-package com.aiolos.live.gift.provider.service;
+package com.aiolos.live.gift.api;
 
 import com.aiolos.live.gift.api.dto.GIftRecordDTO;
 
-public interface GiftRecordService {
-
+public interface GiftRecordApi {
+    
     void insert(GIftRecordDTO dto);
 }

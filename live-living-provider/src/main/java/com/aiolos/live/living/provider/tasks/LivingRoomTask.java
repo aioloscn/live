@@ -2,7 +2,7 @@ package com.aiolos.live.living.provider.tasks;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.common.enums.base.BoolEnum;
-import com.aiolos.common.utils.ConvertBeanUtil;
+import com.aiolos.common.util.ConvertBeanUtil;
 import com.aiolos.live.common.keys.builder.LivingRoomRedisKeyBuilder;
 import com.aiolos.live.enums.LivingRoomTypeEnum;
 import com.aiolos.live.living.vo.LivingRoomVO;

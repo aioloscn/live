@@ -1,6 +1,6 @@
 package com.aiolos.live.enums.exceptions;
 
-import com.aiolos.common.enums.errors.CommonError;
+import com.aiolos.common.enums.error.CommonError;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

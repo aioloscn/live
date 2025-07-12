@@ -2,7 +2,7 @@ package com.aiolos.live.im.router.provider.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
-import com.aiolos.live.im.core.server.interfaces.RouterHandlerRpc;
+import com.aiolos.live.im.core.server.api.RouterHandlerApi;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
 import com.aiolos.live.im.router.provider.service.ImRouterService;
 import jakarta.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ImRouterServiceImpl implements ImRouterService {
 
     @DubboReference
-    private RouterHandlerRpc routerHandlerRpc;
+    private RouterHandlerApi routerHandlerApi;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -34,7 +34,7 @@ public class ImRouterServiceImpl implements ImRouterService {
         }
         // host:port
         RpcContext.getContext().set("ip", serverIpAddress.substring(0, serverIpAddress.indexOf("%")));
-        routerHandlerRpc.sendMsg(imMsgBody); 
+        routerHandlerApi.sendMsg(imMsgBody); 
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ImRouterServiceImpl implements ImRouterService {
                 List<ImMsgBody> msgBodyList = new ArrayList<>();
                 userIds.forEach(userId -> msgBodyList.addAll(userMsgBodyMap.get(userId)));
                 RpcContext.getContext().set("ip", ip);
-                routerHandlerRpc.batchSendMsg(msgBodyList);
+                routerHandlerApi.batchSendMsg(msgBodyList);
             });
         }
     }

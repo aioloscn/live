@@ -1,7 +1,7 @@
 package com.aiolos.live.living.provider.rpc;
 
-import com.aiolos.live.common.wrapper.PageModel;
-import com.aiolos.live.common.wrapper.PageResult;
+import com.aiolos.common.wrapper.PageModel;
+import com.aiolos.common.wrapper.PageResult;
 import com.aiolos.live.living.dto.LivingRoomListDTO;
 import com.aiolos.live.living.dto.LivingRoomUserDTO;
 import com.aiolos.live.living.dto.StreamingDTO;

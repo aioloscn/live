@@ -2,14 +2,14 @@ package com.aiolos.live.api.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.aiolos.common.model.ContextInfo;
-import com.aiolos.common.utils.ConvertBeanUtil;
+import com.aiolos.common.util.ConvertBeanUtil;
 import com.aiolos.live.api.bo.LivingRoomListBO;
 import com.aiolos.live.api.service.HomeLivingRoomService;
 import com.aiolos.live.api.vo.ApiLivingRoomVO;
 import com.aiolos.live.api.vo.LivingRoomListVO;
-import com.aiolos.live.common.utils.PageConvertUtil;
-import com.aiolos.live.common.wrapper.PageModel;
-import com.aiolos.live.common.wrapper.PageResult;
+import com.aiolos.common.util.PageConvertUtil;
+import com.aiolos.common.wrapper.PageModel;
+import com.aiolos.common.wrapper.PageResult;
 import com.aiolos.live.living.dto.LivingRoomListDTO;
 import com.aiolos.live.living.dto.StreamingDTO;
 import com.aiolos.live.living.interfaces.LivingRoomRpc;
