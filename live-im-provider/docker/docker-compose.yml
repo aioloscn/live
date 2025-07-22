@@ -1,9 +1,9 @@
 services:
-  live-im-provider-docker:
+  live-im-provider:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: 'live-im-provider-docker:latest'
+    image: 'live-im-provider:latest'
     environment:
       - server.port=9921
       - spring.cloud.nacos.discovery.ip=${DEV_HOST} # 不同物理机必须明确指定IP

@@ -1,9 +1,9 @@
 package com.aiolos.live.im.core.server.mq.consumer;
 
-import com.aiolos.live.common.message.ImAckDelayMessage;
 import com.aiolos.live.im.core.server.service.MsgAckService;
 import com.aiolos.live.im.core.server.service.RouterHandlerService;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
+import com.aiolos.live.mq.message.ImAckDelayMessage;
 import com.alibaba.fastjson2.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,9 @@
 services:
-  live-api-docker-1:
+  live-api-1:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: 'live-api-docker:latest'
+    image: 'live-api:latest'
     environment:
       - server.port=9901
       - spring.cloud.nacos.discovery.ip=${DEV_HOST} # 不同物理机必须明确指定IP
@@ -15,11 +15,8 @@ services:
     volumes:
       - D:\tmp\logs\live-api-1:/tmp/logs/live-api
     
-#  live-api-docker-2:
-#    build:
-#      context: ..
-#      dockerfile: docker/Dockerfile
-#    image: 'live-api-docker:latest'
+#  live-api-2:
+#    image: 'live-api:latest'
 #    environment:
 #      - server.port=9902
 #      - spring.cloud.nacos.discovery.ip=${DEV_HOST}

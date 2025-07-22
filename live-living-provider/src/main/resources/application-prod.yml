@@ -1,7 +1,7 @@
 config:
   nacos:
     host: ${NACOS_HOST:127.0.0.1}:18848
-    
+
 spring:
   cloud:
     nacos:
@@ -9,12 +9,12 @@ spring:
       password: nacos
       discovery:
         server-addr: ${config.nacos.host}
-        namespace: dev
+        namespace: public
       config:
         file-extension: yaml
         server-addr: ${config.nacos.host}
-        namespace: dev
+        namespace: public
         group: DEFAULT_GROUP
   config:
-    import: 
-      - optional:nacos:live-api-config.yaml
+    import:
+      - optional:nacos:live-living-provider-config.yaml

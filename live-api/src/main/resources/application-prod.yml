@@ -9,11 +9,11 @@ spring:
       password: nacos
       discovery:
         server-addr: ${config.nacos.host}
-        namespace: dev
+        namespace: public
       config:
         file-extension: yaml
         server-addr: ${config.nacos.host}
-        namespace: dev
+        namespace: public
         group: DEFAULT_GROUP
   config:
     import: 

@@ -4,7 +4,7 @@ config:
     username: nacos
     password: nacos
   rocketmq:
-    host: ${ROCKETMQ_HOST:192.168.0.101}:9876
+    host: ${ROCKETMQ_HOST}:9876
     
 spring:
   cloud:
@@ -13,10 +13,9 @@ spring:
       password: ${config.nacos.password}
       discovery:
         server-addr: ${config.nacos.host}
-        namespace: dev
+        namespace: public
     stream:
       function:
-        # 多个函数必须要配置function.definition，函数名用 ; 隔开
         definition: imBizMsg
       bindings:
         imBizMsg-in-0:
@@ -36,6 +35,6 @@ dubbo:
     name: dubbo-live-im-router-provider
     qos-enable: false
   registry:
-    address: nacos://${config.nacos.host}?namespace=dev&username=${config.nacos.username}&password=${config.nacos.password}
+    address: nacos://${config.nacos.host}?namespace=public&username=${config.nacos.username}&password=${config.nacos.password}
   consumer:
     cluster: imRouter

@@ -11,7 +11,7 @@ spring:
       password: nacos
       discovery:
         server-addr: ${config.nacos.host}
-        namespace: live-test
+        namespace: dev
       config:
         enabled: false
 
@@ -23,4 +23,4 @@ dubbo:
     name: live-im-core-client
     qos-enable: false
   registry:
-    address: nacos://${config.nacos.host}?namespace=live-test&username=nacos&password=nacos
+    address: nacos://${config.nacos.host}?namespace=dev&username=nacos&password=nacos

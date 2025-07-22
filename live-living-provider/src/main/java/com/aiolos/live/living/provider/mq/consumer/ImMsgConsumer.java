@@ -1,8 +1,8 @@
 package com.aiolos.live.living.provider.mq.consumer;
 
 import com.aiolos.live.common.keys.builder.LivingRoomRedisKeyBuilder;
-import com.aiolos.live.common.message.ImOfflineMessage;
-import com.aiolos.live.common.message.ImOnlineMessage;
+import com.aiolos.live.mq.message.ImOfflineMessage;
+import com.aiolos.live.mq.message.ImOnlineMessage;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

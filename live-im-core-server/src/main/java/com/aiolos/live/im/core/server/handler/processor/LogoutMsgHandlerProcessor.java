@@ -1,7 +1,6 @@
 package com.aiolos.live.im.core.server.handler.processor;
 
 import com.aiolos.live.common.keys.builder.common.ImCoreServerCommonRedisKeyBuilder;
-import com.aiolos.live.common.message.ImOfflineMessage;
 import com.aiolos.live.im.core.server.common.ChannelHandlerContextCache;
 import com.aiolos.live.im.core.server.common.ImContextUtil;
 import com.aiolos.live.im.core.server.common.ImMsg;
@@ -9,6 +8,7 @@ import com.aiolos.live.im.core.server.handler.coreflow.AbstractImHandlerProcesso
 import com.aiolos.live.im.core.server.mq.producer.ImMsgProducer;
 import com.aiolos.live.im.interfaces.constants.ImMsgCodeEnum;
 import com.aiolos.live.im.interfaces.dto.ImMsgBody;
+import com.aiolos.live.mq.message.ImOfflineMessage;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;

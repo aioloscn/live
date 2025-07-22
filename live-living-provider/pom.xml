@@ -32,6 +32,10 @@
         </dependency>
         <dependency>
             <groupId>com.aiolos</groupId>
+            <artifactId>live-mq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aiolos</groupId>
             <artifactId>live-living-interface</artifactId>
         </dependency>
         
@@ -42,10 +46,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

@@ -1,0 +1,19 @@
+#dubbo:
+#  application:
+#    name: dubbo-live-api
+#    qos-enable: false
+#  registry:
+#    address: nacos://${NACOS_HOST:127.0.0.1}:18848?namespace=dev&username=nacos&password=nacos
+#  consumer:
+#    retries: 2
+#    timeout: 5000 # 全局默认超时，控制消费者调用服务时的等待时间
+#    check: false
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health
+#  endpoint:
+#    health:
+#      show-details: always
