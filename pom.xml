@@ -9,11 +9,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>live-api</module>
     <module>live-common</module>
+    <module>live-enums</module>
     <module>live-model</module>
     <module>live-service</module>
-    <module>live-enums</module>
+    <module>live-mq</module>
     <module>live-im-interface</module>
     <module>live-im-provider</module>
     <module>live-im-core-server</module>
@@ -24,7 +24,6 @@
     <module>live-living-provider</module>
     <module>live-gift-interface</module>
     <module>live-gift-provider</module>
-    <module>live-mq</module>
   </modules>
 
   <properties>
@@ -32,7 +31,6 @@
     <mybatis-plus.version>3.5.5</mybatis-plus.version>
 
     <!-- 子模块版本号 -->
-    <live-api.version>1.0-SNAPSHOT</live-api.version>
     <live-common.version>1.0-SNAPSHOT</live-common.version>
     <live-enums.version>1.0-SNAPSHOT</live-enums.version>
     <live-model.version>1.0-SNAPSHOT</live-model.version>

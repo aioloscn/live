@@ -1,11 +1,11 @@
-package com.aiolos.live.living.dto;
+package com.aiolos.live.living.provider.bo;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class StreamingDTO implements Serializable {
+public class StreamingBO implements Serializable {
     
     private Long streamerId;
     private Long roomId;

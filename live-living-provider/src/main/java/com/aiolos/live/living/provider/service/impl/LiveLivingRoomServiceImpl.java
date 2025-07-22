@@ -7,9 +7,9 @@ import com.aiolos.live.common.keys.builder.LivingRoomRedisKeyBuilder;
 import com.aiolos.common.wrapper.Page;
 import com.aiolos.common.wrapper.PageModel;
 import com.aiolos.common.wrapper.PageResult;
-import com.aiolos.live.living.dto.LivingRoomListDTO;
 import com.aiolos.live.living.dto.LivingRoomUserDTO;
-import com.aiolos.live.living.dto.StreamingDTO;
+import com.aiolos.live.living.provider.bo.LivingRoomListBO;
+import com.aiolos.live.living.provider.bo.StreamingBO;
 import com.aiolos.live.living.provider.service.LiveLivingRoomService;
 import com.aiolos.live.living.vo.LivingRoomUserVO;
 import com.aiolos.live.living.vo.LivingRoomVO;
@@ -42,8 +42,8 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
     private LivingRoomRecordService livingRoomRecordService;
     
     @Override
-    public Long startStreaming(StreamingDTO dto) {
-        LivingRoom livingRoom = ConvertBeanUtil.convert(dto, LivingRoom.class);
+    public Long startStreaming(StreamingBO bo) {
+        LivingRoom livingRoom = ConvertBeanUtil.convert(bo, LivingRoom.class);
         livingRoom.setStatus(BoolEnum.YES.getValue());
         livingRoomService.save(livingRoom);
         // 防止之前有空值缓存
@@ -53,21 +53,21 @@ public class LiveLivingRoomServiceImpl implements LiveLivingRoomService {
 
     @Override
     @Transactional
-    public void stopStreaming(StreamingDTO dto) {
-        LivingRoom livingRoom = livingRoomService.lambdaQuery().eq(LivingRoom::getId, dto.getRoomId()).eq(LivingRoom::getStreamerId, dto.getStreamerId()).one();
+    public void stopStreaming(StreamingBO bo) {
+        LivingRoom livingRoom = livingRoomService.lambdaQuery().eq(LivingRoom::getId, bo.getRoomId()).eq(LivingRoom::getStreamerId, bo.getStreamerId()).one();
         if (livingRoom == null) {
             return;
         }
         LivingRoomRecord livingRoomRecord = ConvertBeanUtil.convert(livingRoom, LivingRoomRecord.class);
         livingRoomRecord.setId(null);
         if (livingRoomRecordService.save(livingRoomRecord)) {
-            livingRoomService.removeById(dto.getRoomId());
-            redisTemplate.delete(livingRoomRedisKeyBuilder.buildLivingRoomObjKey(dto.getRoomId()));
+            livingRoomService.removeById(bo.getRoomId());
+            redisTemplate.delete(livingRoomRedisKeyBuilder.buildLivingRoomObjKey(bo.getRoomId()));
         }
     }
 
     @Override
-    public PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListDTO> model) {
+    public PageResult<LivingRoomVO> queryLivingRoomList(PageModel<LivingRoomListBO> model) {
         String key = livingRoomRedisKeyBuilder.buildLivingRoomListKey(model.getData().getType());
         long current = model.getCurrent();
         long size = model.getSize();

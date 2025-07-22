@@ -9,6 +9,12 @@ import java.time.LocalDateTime;
 @Data
 public class LivingRoomVO implements Serializable {
 
+    private Long roomId;
+    private Long userId;
+    private String nickName;
+    private String avatar;
+    
+    @Schema(description = "roomId")
     private Long id;
 
     @Schema(description = "主播id")

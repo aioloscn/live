@@ -1,4 +1,4 @@
-package com.aiolos.live.api.vo;
+package com.aiolos.live.living.provider.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
